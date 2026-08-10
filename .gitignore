@@ -4,7 +4,6 @@ env/
 venv/
 # Archivos de configuración de VS Code y Jupyter
 .vscode/
-.ipynb_checkpoints/
 # Archivos de caché de Python
 __pycache__/
 *.pyc
