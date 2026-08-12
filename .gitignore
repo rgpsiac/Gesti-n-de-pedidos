@@ -2,10 +2,14 @@
 .venv/
 env/
 venv/
-# Archivos de configuración de VS Code y Jupyter
+# Archivos de configuración de VS Code
 .vscode/
 # Archivos de caché de Python
 __pycache__/
 *.pyc
+.pytest_cache/
 # Archivos de variables de entorno y credenciales
 .env
+.streamlit/secrets.toml
+*.db
+*.sqlite3
