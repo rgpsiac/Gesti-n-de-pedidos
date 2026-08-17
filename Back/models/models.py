@@ -7,6 +7,8 @@ class Cliente(Base):
     __tablename__ = "clientes"
     id_cliente = Column(Integer, primary_key=True, autoincrement=True, unique=True, nullable=False)
     nombre = Column(String, nullable=False)
+    telefono = Column(String, nullable=False)
+    canal_entrada = Column(String, nullable=False)
     info_orden = relationship("Orden", back_populates="info_cliente")
 
 class Orden(Base):
@@ -14,8 +16,8 @@ class Orden(Base):
     id_orden = Column(Integer, primary_key=True, autoincrement=True, unique=True, nullable=False)
     id_cliente = Column(Integer, ForeignKey("clientes.id_cliente"))
     tipo_pedido = Column(String, nullable=False)
-    fecha_pedido = Column(DateTime)
-    fecha_entrega = Column(DateTime)
+    fecha_pedido = Column(String)
+    fecha_entrega = Column(String)
     precio_total = Column(Float, nullable=False)
     pagado = Column(Float, nullable=False, default=0.0)
     estatus = Column(String, nullable=False, default="Pendiente")

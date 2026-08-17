@@ -4,6 +4,8 @@ from datetime import datetime
 
 class ClienteBase(BaseModel):
     nombre: str = Field(min_length=2)
+    telefono: str|None = Field(max_length=15)
+    canal_entrada: str|None = Field(default=None)
 
 class ClienteRequest(ClienteBase):
     pass    

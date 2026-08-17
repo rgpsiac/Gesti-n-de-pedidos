@@ -9,7 +9,9 @@ class BaseServiceSheetsLimpieza(ABC):
 
     def crear_cliente(self) -> ClienteRequest:
         nombre_cliente = self.data.nombre.strip().title()
-        return ClienteRequest(nombre=nombre_cliente)
+        numero_original = self.data.telefono
+        numero_cliente = str(numero_original) if numero_original else None
+        return ClienteRequest(nombre=nombre_cliente, telefono=numero_cliente, canal_entrada="Pendiente")
 
     def crear_orden(self) -> OrdenRequest:
         return OrdenRequest(
