@@ -33,6 +33,8 @@ class DetalleOrdenBase(BaseModel):
     producto: str
     detalle: str
     cantidad: int = Field(ge=0, default=0)
+    extra: str = Field(default="No")
+    pertenencia: str = Field(default="Kit 1")
 
 class DetalleOrdenRequest(DetalleOrdenBase):
     id_orden: int
