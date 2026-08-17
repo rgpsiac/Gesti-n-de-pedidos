@@ -14,8 +14,8 @@ class ClienteResponse(ClienteBase):
 
 class OrdenBase(BaseModel):
     tipo_pedido: str
-    fecha_pedido: datetime
-    fecha_entrega: datetime
+    fecha_pedido: str|None = Field(default=None)
+    fecha_entrega: str|None = Field(default=None)
     precio_total: float = Field(ge=0, default=0.0)
     pagado: float = Field(ge=0, default=0.0)
     estatus: str

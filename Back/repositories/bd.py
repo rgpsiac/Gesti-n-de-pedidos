@@ -5,6 +5,17 @@ from dotenv import load_dotenv
 from sqlalchemy import NullPool
 from sqlalchemy import text
 
+load_dotenv()
+url = os.getenv("DATABASE_URL")
+engine = create_engine(url, poolclass=NullPool)
+SessionLocal = sessionmaker(bind=engine)
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
 class DatabaseManager:
     def __init__(self):
         load_dotenv()
