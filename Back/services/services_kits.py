@@ -33,7 +33,7 @@ class ServiceLimpiezaSheetsKits(BaseServiceSheetsLimpieza):
             detalles.append(DetalleOrdenRequest(
                 tipo_pedido="Kit",
                 producto="Mandil",
-                detalle=self.data.color_mandil_kit,
+                detalle=str(self.data.color_mandil_kit).title(),
                 cantidad=1,
                 id_orden=0, #Temporal
                 id_producto=0, #Temporal
@@ -43,7 +43,7 @@ class ServiceLimpiezaSheetsKits(BaseServiceSheetsLimpieza):
             detalles.append(DetalleOrdenRequest(
                 tipo_pedido="Kit",
                 producto="Guantes de plástico",
-                detalle=self.data.talla_guantes_kit,
+                detalle=str(self.data.talla_guantes_kit).title(),
                 cantidad=1,
                 id_orden=0,
                 id_producto=0,
@@ -52,7 +52,7 @@ class ServiceLimpiezaSheetsKits(BaseServiceSheetsLimpieza):
             detalles.append(DetalleOrdenRequest(
                 tipo_pedido="Kit",
                 producto="Guantes de nitrilo",
-                detalle=self.data.talla_guantes_kit,
+                detalle=str(self.data.talla_guantes_kit).title(),
                 cantidad=1,
                 id_orden=0,
                 id_producto=0,
@@ -167,7 +167,7 @@ class ServiceLimpiezaSheetsKits(BaseServiceSheetsLimpieza):
                 cantidad=1,
                 id_orden=0,
                 id_producto=0,
-                extra="No"
+                extra="Sí"
             ))
         else:
             detalles.append(DetalleOrdenRequest(
@@ -190,14 +190,14 @@ class ServiceLimpiezaSheetsCombos(BaseServiceSheetsLimpieza):
                 if isinstance(valor, str):
                     if llave.startswith("colm_combo_"):
                         producto = "Mandil"
-                        detalle = llave.replace("colm_combo_",'').replace("_",' ').title()
+                        detalle = llave.replace("colm_combo_",'').replace("_",' ').strip().title()
                         kits = valor.split(",")
                         for kit in kits:
                             k = kit.strip()
                             detalles.append(DetalleOrdenRequest(
                                 tipo_pedido="Combo",
                                 producto=producto,
-                                detalle=detalle,
+                                detalle=detalle.title(),
                                 cantidad=1,
                                 extra="No",
                                 pertenencia=k,
@@ -334,19 +334,20 @@ class ServiceLimpiezaSheetsCombos(BaseServiceSheetsLimpieza):
                             detalles.append(DetalleOrdenRequest(
                                 tipo_pedido="Combo",
                                 producto="Cuchillo",
-                                detalle="Cuchilo",
+                                detalle="Cuchillo",
                                 cantidad=valor,
                                 pertenencia="Extra",
                                 id_orden=0,
-                                id_producto=0
+                                id_producto=0,
+                                extra="Sí"
                             ))
         if self.data.pregunta_kit_extra and "Sí" in self.data.pregunta_kit_extra:
             detalles.append(DetalleOrdenRequest(
                 tipo_pedido="Combo",
                 producto="Mandil",
-                detalle=self.data.col_kit_extra,
+                detalle=str(self.data.col_kit_extra).title(),
                 cantidad=1,
-                extra="Sí",
+                extra="No",
                 pertenencia=f"Kit {self.data.numero_kits+1}",
                 id_orden=0,
                 id_producto=0
@@ -354,9 +355,9 @@ class ServiceLimpiezaSheetsCombos(BaseServiceSheetsLimpieza):
             detalles.append(DetalleOrdenRequest(
                 tipo_pedido="Combo",
                 producto="Guantes de plástico",
-                detalle=self.data.talla_guantes_kit_extra,
+                detalle=str(self.data.talla_guantes_kit_extra).title(),
                 cantidad=1,
-                extra="Sí",
+                extra="No",
                 pertenencia=f"Kit {self.data.numero_kits+1}",
                 id_orden=0,
                 id_producto=0
@@ -364,9 +365,9 @@ class ServiceLimpiezaSheetsCombos(BaseServiceSheetsLimpieza):
             detalles.append(DetalleOrdenRequest(
                 tipo_pedido="Combo",
                 producto="Guantes de nitrilo",
-                detalle=self.data.talla_guantes_kit_extra,
+                detalle=str(self.data.talla_guantes_kit_extra).title(),
                 cantidad=1,
-                extra="Sí",
+                extra="No",
                 pertenencia=f"Kit {self.data.numero_kits+1}",
                 id_orden=0,
                 id_producto=0
@@ -376,24 +377,24 @@ class ServiceLimpiezaSheetsCombos(BaseServiceSheetsLimpieza):
                 producto="Cuchillo",
                 detalle="Cuchillo",
                 cantidad=1,
-                extra="Sí",
+                extra="No",
                 pertenencia=f"Kit {self.data.numero_kits+1}",
                 id_orden=0,
                 id_producto=0
             ))
         if self.data.extra_bolsa_tote and "Sí" in self.data.extra_bolsa_tote:
-            if "una Tote en total" in self.data.extra_bolsa_tote:
+            if self.data.extra_bolsa_tote and "una Tote en total" in self.data.extra_bolsa_tote:
                 detalles.append(DetalleOrdenRequest(
                     tipo_pedido="Combo",
                     producto="Bolsa",
                     detalle="Tote",
                     cantidad=1,
-                    extra="No",
+                    extra="Sí",
                     pertenencia="Kit 1",
                     id_orden=0,
                     id_producto=0
                 ))
-            elif "una Tote para cada" in self.data.extra_bolsa_tote:
+            elif self.data.extra_bolsa_tote and "una Tote para cada" in self.data.extra_bolsa_tote:
                 cantidad_kits = self.data.numero_kits
                 cantidad_kits_extra = 1 if self.data.pregunta_kit_extra and "Sí" in self.data.pregunta_kit_extra else 0
                 for i in range(1, cantidad_kits+cantidad_kits_extra+1):
@@ -402,7 +403,7 @@ class ServiceLimpiezaSheetsCombos(BaseServiceSheetsLimpieza):
                         producto="Bolsa",
                         detalle="Tote",
                         cantidad=1,
-                        extra="No",
+                        extra="Sí",
                         pertenencia=f"Kit {i}",
                         id_orden=0,
                         id_producto=0
@@ -529,7 +530,7 @@ class ServiceLimpiezaSheetsPiezas(BaseServiceSheetsLimpieza):
                 producto="Bolsa",
                 detalle="Tote",
                 cantidad=1,
-                extra="No",
+                extra="Sí",
                 pertenencia="Individual",
                 id_orden=0,
                 id_producto=0

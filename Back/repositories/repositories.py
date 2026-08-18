@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
-from Back.models.dtos_tipoa import ClienteRequest, OrdenRequest, DetalleOrdenRequest
-from Back.models.models import Cliente, Orden, DetalleOrden, CatalogoProducto
+from Back.models.dtos_tipoa import ClienteRequest, OrdenRequest, DetalleOrdenRequest, DetalleOrdenResponse, OrdenResponse
+from Back.models.models import Cliente, Orden, DetalleOrden, CatalogoProducto, CatalogoPedido
+from typing import List
 
 # Este archivo almacena las clases que se emplearán en el pipeline de google sheets
 # Los patrones de estas clases son Repository.
@@ -41,11 +42,11 @@ class RepositoryOrdenes():
         detalles = DetalleOrden(**detalle_orden.model_dump())
         self.db.add(detalles)
         self.db.flush()
-    def traer_orden(self, id_orden: int):
+    def traer_ordenes(self) -> List[OrdenResponse]:
         """
         Este método hace una query a la bd para devolver la información sobre la orden, tal como fecha de entrega, pagado, deuda, tipo de pedido, etc.
         """
-        pass
+        return self.db.query(Orden).all()
     def traer_detalle_orden(self, id_orden: int):
         """
         Este método hace una query a la bd para devolver la información detallada de la orden con base en un id_orden, tal como los productos incluidos, sus detalles y cantidades.
@@ -74,3 +75,18 @@ class RepositoryCatalogoProductos:
         if not resultado:
             raise ValueError(f"El producto {producto} {detalle} no se encuentra en la base de datos")
         return resultado.id_producto
+    def obtener_precio_pedidos(self, tipo_pedido: str) -> float:
+        resultado = self.db.query(CatalogoPedido).filter(
+            CatalogoPedido.tipo_pedido == tipo_pedido,
+        ).first()
+        if not resultado:
+            return 0.0
+        return resultado.precio
+    def obtener_precio_piezas(self, pieza: str, detalle: str) -> float:
+        resultado = self.db.query(CatalogoProducto).filter(
+            CatalogoProducto.producto == pieza,
+            CatalogoProducto.detalle == detalle
+        ).first()
+        if not resultado:
+            return 0.0
+        return resultado.precio

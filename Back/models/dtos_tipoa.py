@@ -37,6 +37,8 @@ class DetalleOrdenBase(BaseModel):
     cantidad: int = Field(ge=0, default=0)
     extra: str = Field(default="No")
     pertenencia: str = Field(default="Kit 1")
+    precio_unitario: float = Field(default=0.0)
+    subtotal: float = Field(default=0.0)
 
 class DetalleOrdenRequest(DetalleOrdenBase):
     id_orden: int
@@ -76,6 +78,7 @@ class CatalogoPedidoResponse(CatalogoPedidoBase):
 class CatalogoProductoBase(BaseModel):
     producto: str
     detalle: str
+    precio: float = Field(default=0.0)
 
 class CatalogoProductoRequest(CatalogoProductoBase):
     pass

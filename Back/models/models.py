@@ -35,6 +35,8 @@ class DetalleOrden(Base):
     cantidad = Column(Integer, nullable=False)
     extra = Column(String, nullable=False)
     pertenencia = Column(String, nullable=False)
+    precio_unitario = Column(Float, nullable=False, default=0.0)
+    subtotal = Column(Float, nullable=False, default=0.0)
     info_orden = relationship("Orden", back_populates="detalle_orden")
     cat_producto = relationship("CatalogoProducto", back_populates="detalle_orden")
     cat_pedido = relationship("CatalogoPedido", back_populates="detalle_orden")
@@ -53,7 +55,7 @@ class Inventario(Base):
 class CatalogoPedido(Base):
     __tablename__ = "catalogo_pedidos"
     tipo_pedido = Column(String, primary_key=True, nullable=False)
-    precio = Column(Float, nullable=False)
+    precio = Column(Float, nullable=False, default=0.0)
     detalle_orden = relationship("DetalleOrden", back_populates="cat_pedido")
     
 
@@ -62,5 +64,6 @@ class CatalogoProducto(Base):
     id_producto = Column(Integer, primary_key=True, unique=True, nullable=False)
     producto = Column(String, nullable=False)
     detalle = Column(String, nullable=False)
+    precio = Column(Float, nullable=False, default=0.0)
     detalle_orden = relationship("DetalleOrden", back_populates="cat_producto")
     info_inventario = relationship("Inventario", back_populates="cat_producto")
