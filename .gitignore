@@ -10,7 +10,6 @@ __pycache__/
 .pytest_cache/
 # Archivos de variables de entorno y credenciales
 .env
-.streamlit/secrets.toml
 *.db
 *.sqlite3
 .streamlit/secrets.toml
