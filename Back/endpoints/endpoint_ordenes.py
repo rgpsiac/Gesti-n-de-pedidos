@@ -9,7 +9,7 @@ from Back.utils.api_verification import verificar_api
 
 router = APIRouter(prefix="/api/v1/ordenes", tags=["Gestión de pedidos"], dependencies=[Depends(verificar_api)])
 
-@router.get("/", response_model=List[OrdenResponse])
+@router.get("/")
 def traer_ordenes_endpoint(db: Session = Depends(get_db)):
     try:
         servicio = ServiceOrdenes(db=db)
