@@ -1,15 +1,29 @@
 # Entorno virtual
+
 .venv/
+
 env/
+
 venv/
+
 # Archivos de configuración de VS Code
+
 .vscode/
+
 # Archivos de caché de Python
+
 __pycache__/
+
 *.pyc
+
 .pytest_cache/
+
 # Archivos de variables de entorno y credenciales
+
 .env
+
 *.db
+
 *.sqlite3
-.streamlit/secrets.toml
+
+Front/.streamlit/secrets.toml

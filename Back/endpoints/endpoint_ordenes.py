@@ -5,8 +5,9 @@ from Back.repositories.bd import get_db
 from Back.services.services_ordenes import ServiceOrdenes
 from Back.repositories.repositories import RepositoryOrdenes
 from Back.models.dtos_tipoa import OrdenResponse, DetalleOrdenResponse, OrdenRequest, DetalleOrdenRequest, PatchDetallesOrden, PatchEstadoOrden, PatchFechaEntrega, PatchNombre, PatchPago
+from Back.utils.api_verification import verificar_api
 
-router = APIRouter(prefix="/api/v1/ordenes", tags=["Gestión de pedidos"])
+router = APIRouter(prefix="/api/v1/ordenes", tags=["Gestión de pedidos"], dependencies=[Depends(verificar_api)])
 
 @router.get("/", response_model=List[OrdenResponse])
 def traer_ordenes_endpoint(db: Session = Depends(get_db)):
