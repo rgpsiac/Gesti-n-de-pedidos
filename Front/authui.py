@@ -5,6 +5,9 @@ st.set_page_config(
     layout='wide',
     initial_sidebar_state='expanded'
 )
+admin1 = st.secrets["ADMIN1"]
+admin2 = st.secrets["ADMIN2"]
+psswrd = st.secrets["KEY"]
 
 def iniciar_sesion():
     st.title("Acceso a la app")
@@ -19,7 +22,7 @@ def iniciar_sesion():
         submit = st.form_submit_button("Acceder")
 
         if submit:
-            if (usuario == "Chirris" or usuario == "Chiji") and password == "170123":
+            if (usuario == admin1 or usuario == admin2) and password == psswrd:
                 st.session_state['autenticado'] = True
                 st.session_state['usuario'] = usuario
                 st.rerun()
