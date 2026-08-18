@@ -28,6 +28,12 @@ class RepositoryClientes():
     def ver_cliente(self, id_buscado):
         return self.db.query(Cliente).filter(Cliente.id_cliente == id_buscado).first()
 
+    def actualizar_nombre(self, id_cliente: int, nombre: dict):
+        fila_afectada = self.db.query(Cliente).filter(
+            Cliente.id_cliente == id_cliente
+        ).update(nombre)
+        return fila_afectada
+
 
 class RepositoryOrdenes():
     def __init__(self, db_session: Session):
@@ -47,21 +53,34 @@ class RepositoryOrdenes():
         Este método hace una query a la bd para devolver la información sobre la orden, tal como fecha de entrega, pagado, deuda, tipo de pedido, etc.
         """
         return self.db.query(Orden).all()
+    def traer_info_orden(self, id_orden: int):
+        return self.db.query(Orden).filter(
+            Orden.id_orden == id_orden
+        ).first()
     def traer_detalle_orden(self, id_orden: int):
         """
         Este método hace una query a la bd para devolver la información detallada de la orden con base en un id_orden, tal como los productos incluidos, sus detalles y cantidades.
         """
-        pass
+        return self.db.query(DetalleOrden).filter(
+            DetalleOrden.id_orden == id_orden
+        ).all()
     def actualizar_orden(self, id_orden: int, atributos: dict):
         """
         Este método actualiza los atributos de la orden: fecha de entrega, estatus, pagado. Usa un diccionario donde la clave es el atributo y el valor el nuevo valor para actualizarlos por los valores viejos. 
         """
-        pass
-    def actualizar_detalle_orden(self, id_orden: int):
+        patch_orden = self.db.query(Orden).filter(
+            Orden.id_orden == id_orden
+        ).update(atributos)
+        return patch_orden
+    
+    def actualizar_detalle_orden(self, id_detalle: int, items: dict):
         """
         Este método actualiza cualquiera de las siguientes columnas: Producto, Detalle, Cantidad. Es útil para facilitar el cambio en los detalles de una orden cuando el cliente realizó mal un pedido. No permite agregar nuevos items ni quitar los actuales. 
         """
-        pass
+        items_cambiados = self.db.query(DetalleOrden).filter(
+            DetalleOrden.id_detalle == id_detalle
+        ).update(items)
+        return items_cambiados
 
 
 class RepositoryCatalogoProductos:

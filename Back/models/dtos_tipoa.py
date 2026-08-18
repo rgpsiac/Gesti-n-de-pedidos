@@ -86,3 +86,24 @@ class CatalogoProductoRequest(CatalogoProductoBase):
 class CatalogoProductoResponse(CatalogoProductoBase):
     id_producto: int
     model_config = ConfigDict(from_attributes=True)
+
+class PatchEstadoOrden(BaseModel):
+    id_orden: int|None = Field(default=None)
+    nuevo_estado: str
+
+class PatchFechaEntrega(BaseModel):
+    id_orden: int|None = Field(default=None)
+    nueva_fecha: str
+
+class PatchDetallesOrden(BaseModel):
+    id_detalle: int|None = Field(default=None)
+    nuevo_detalle: str|None = Field(default=None)
+    cantidad: int|None = Field(default=None)
+
+class PatchNombre(BaseModel):
+    id_orden: int|None = Field(default=None)
+    nuevo_nombre: str
+
+class PatchPago(BaseModel):
+    id_orden: int|None = Field(default=None)
+    pago: float
