@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from api_client import APIClient
 import plotly.express as px
+import time
 
 st.title("Gestión de Pedidos")
 cliente_api = APIClient()
@@ -21,7 +22,7 @@ else:
         df_ordenes = df[columnas_editor_ordenes].drop_duplicates(subset="Id Orden").reset_index(drop=True)
         if "Explorar" not in df_ordenes.columns:
             df_ordenes.insert(0,"Explorar",False)
-        df_ordenes = df_ordenes.set_index("Id Orden", drop=False)
+        df_ordenes = df_ordenes.sort_values("Id Orden").reset_index(drop=True)
 
         df_editado = st.data_editor(
             data=df_ordenes,
@@ -49,7 +50,7 @@ else:
         else:
             with st.spinner("Guardando cambios..."):
                 for idx_fila, cambio in cambios.items():
-                    id_orden = idx_fila
+                    id_orden = df_ordenes.iloc[idx_fila]["Id Orden"]
                     if "Estatus" in cambio:
                         nuevo_estado = cambio["Estatus"]
                         cliente_api.actualizar_estado(id_orden=id_orden, nuevo_estado=nuevo_estado)
@@ -62,7 +63,9 @@ else:
                     if "Pagado" in cambio:
                         pago = cambio["Pagado"]
                         cliente_api.actualizar_pago(id_orden=id_orden, pago=pago)
+                del st.session_state["editor_ordenes"]
             st.toast("Cambios hechos correctamente")
+            time.sleep(1)
             st.rerun()
 
     st.divider()
@@ -75,8 +78,9 @@ else:
 
         df_detalles = df[df["Id Orden"] == id_selected]
         df_detalles = df_detalles[columnas_editor_detalles]
-        df_detalles = df_detalles.set_index("Id detalles", drop=False)
+        df_detalles = df_detalles.sort_values("Id detalles").reset_index(drop=True)
         opciones_disponbiles = df["Detalle"].unique().tolist()
+
         st.subheader(f"Detalles de la orden {id_selected}")
 
         fig_detalles_orden = px.sunburst(
@@ -113,7 +117,7 @@ else:
             else:
                 with st.spinner("Guardando cambios..."):
                     for idx_fila, cambio in cambios.items():
-                        id_detalle_selected = idx_fila
+                        id_detalle_selected = df_detalles.iloc[idx_fila]["Id detalles"]
                         n_detalle = cambio.get("Detalle")
                         n_cantidad = cambio.get("Cantidad")
                         cliente_api.actualizar_detalle_orden(
@@ -121,7 +125,9 @@ else:
                             nuevo_detalle=n_detalle,
                             nueva_cantidad=n_cantidad
                         )
+                    del st.session_state["editor_detalles"]
                 st.toast("Cambios hechos correctamente")
+                time.sleep(1)
                 st.rerun()
 
     else:
