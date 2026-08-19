@@ -36,9 +36,10 @@ else:
             "Pagado": st.column_config.NumberColumn("Pagado", format="$%d", min_value=0, disabled=False),
             "Deuda": st.column_config.NumberColumn("Deuda", format="$%d", min_value=0),
             "Estatus": st.column_config.SelectboxColumn("Estatus", help="Cambia el Estatus según el avance del pedido", required=True, options=["Pendiente", "En proceso", "Empacado", "Entregado", "Devuelto por cambios"]),
-            "Explorar": st.column_config.CheckboxColumn(label="Ver detalles",width='small', pinned=True, default=False)
+            "Explorar": st.column_config.CheckboxColumn(label="Ver detalles",width='small', pinned=True, default=False),
+            "Id Cliente": None
                 },
-                disabled=["Id Orden","Teléfono","Tipo de Pedido","Total","Deuda"])
+                disabled=["Id Orden","Teléfono","Tipo de Pedido","Total","Deuda", "Id Cliente"])
 
     if st.button("Guardar Cambios"):
         cambios = st.session_state["editor_ordenes"].get("edited_rows",{})
@@ -80,6 +81,11 @@ else:
             path=["Pertenencia", "Producto", "Detalle"],
             values="Cantidad",
             title="Armado de Kits"
+        )
+        fig_detalles_orden.update_layout(
+            height = 600,
+            font = dict(size=18),
+            margin=dict(t=30, l=10, r=10, b=10)
         )
         st.plotly_chart(figure_or_data=fig_detalles_orden, use_container_width=True)
 
