@@ -30,7 +30,7 @@ else:
             "Id Orden": st.column_config.NumberColumn("ID"),
             "Cliente": st.column_config.TextColumn("Nombre del cliente", disabled=False),
             "Teléfono": st.column_config.NumberColumn("Celular"),
-            "Tipo de Pedido": st.column_config.NumberColumn("Tipo"),
+            "Tipo de Pedido": st.column_config.TextColumn("Tipo de Pedido"),
             "Total": st.column_config.NumberColumn("Precio"),
             "Fecha de Entrega": st.column_config.SelectboxColumn("Fecha de Entrega",disabled=False, help="Elige la fecha por la que quieras actualizar el pedido", options=["Lunes 24 de agosto", "Viernes 28 de agosto", "Lunes 31 de agosto", "Viernes 4 de septiembre", "Lunes 7 de septiembre", "Viernes 11 de septiembre"]),
             "Pagado": st.column_config.NumberColumn("Pagado", format="$%d", min_value=0, disabled=False),
@@ -96,12 +96,12 @@ else:
             key="editor_detalles",
             column_config={
                 "Id Orden": st.column_config.NumberColumn("Id Orden"),
-                "Id detalles": st.column_config.NumberColumn("Id detalles"),
+                "Id detalles": None,
                 "Producto": st.column_config.TextColumn("Producto"),
                 "Detalle": st.column_config.SelectboxColumn("Detalle", help="Puedes cambiar el color o talla del producto si es necesario", options=opciones_disponbiles),
                 "Cantidad": st.column_config.NumberColumn("Cantidad", help="Puedes cambiar la cantidad del producto si es necesario")
             },
-            disabled=["Id Orden", "Id detalles", "Producto"]
+            disabled=["Id Orden", "Id detalles", "Producto", "Pertenencia"]
         )
         if st.button("Guardar cambios"):
             cambios = st.session_state["editor_detalles"].get("edited_rows",{})
