@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from datetime import datetime
 
 
@@ -57,3 +57,10 @@ class DTOBSheets(BaseModel):
     especial_bolsa_tote: int|None = Field(alias='Tote bag - Especial', default=0)
     extra_bolsa_tote: str|None = Field(alias='¿Quieres recibir tu pedido en una tote bag?', default=None)
     fecha_entrega: str|None = Field(alias='Fechas', default=None)
+
+    @field_validator("numero_kits","especial_bolsa_tote", mode='before')
+    @classmethod
+    def validar_celdas(cls, valor_original):
+        if isinstance(valor_original, str) and valor_original.strip() == "":
+            return 0
+        return valor_original
