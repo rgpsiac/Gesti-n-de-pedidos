@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from api_client import APIClient
+import plotly.express as px
 
 st.title("Gestión de Pedidos")
 cliente_api = APIClient()
@@ -26,17 +27,18 @@ else:
         hide_index=True,
         key="editor_ordenes",
         column_config={
-            "Id Orden": st.column_config.NumberColumn("ID", disabled=True),
+            "Id Orden": st.column_config.NumberColumn("ID"),
             "Cliente": st.column_config.TextColumn("Nombre del cliente", disabled=False),
-            "Teléfono": st.column_config.NumberColumn("Celular", disabled=True),
-            "Tipo de Pedido": st.column_config.NumberColumn("Tipo", disabled=True),
-            "Total": st.column_config.NumberColumn("Precio", disabled=True),
+            "Teléfono": st.column_config.NumberColumn("Celular"),
+            "Tipo de Pedido": st.column_config.NumberColumn("Tipo"),
+            "Total": st.column_config.NumberColumn("Precio"),
             "Fecha de Entrega": st.column_config.SelectboxColumn("Fecha de Entrega",disabled=False, help="Elige la fecha por la que quieras actualizar el pedido", options=["Lunes 24 de agosto", "Viernes 28 de agosto", "Lunes 31 de agosto", "Viernes 4 de septiembre", "Lunes 7 de septiembre", "Viernes 11 de septiembre"]),
             "Pagado": st.column_config.NumberColumn("Pagado", format="$%d", min_value=0, disabled=False),
-            "Deuda": st.column_config.NumberColumn("Deuda", disabled=True, format="$%d", min_value=0),
+            "Deuda": st.column_config.NumberColumn("Deuda", format="$%d", min_value=0),
             "Estatus": st.column_config.SelectboxColumn("Estatus", help="Cambia el Estatus según el avance del pedido", required=True, options=["Pendiente", "En proceso", "Empacado", "Entregado", "Devuelto por cambios"]),
-            "Explorar": st.column_config.CheckboxColumn(label="Ver detalles",width='medium', pinned=True, default=False)
-                })
+            "Explorar": st.column_config.CheckboxColumn(label="Ver detalles",width='small', pinned=True, default=False)
+                },
+                disabled=["Id Orden","Teléfono","Tipo de Pedido","Total","Deuda"])
 
     if st.button("Guardar Cambios"):
         cambios = st.session_state["editor_ordenes"].get("edited_rows",{})
@@ -73,18 +75,27 @@ else:
         opciones_disponbiles = df["Detalle"].unique().tolist()
         st.subheader(f"Detalles de la orden {id_selected}")
 
+        fig_detalles_orden = px.sunburst(
+            data_frame=df_detalles,
+            path=["Pertenencia", "Producto", "Detalle"],
+            values="Cantidad",
+            title="Armado de Kits"
+        )
+        st.plotly_chart(figure_or_data=fig_detalles_orden, use_container_width=True)
+
         st.data_editor(
             data=df_detalles,
             use_container_width=True,
             hide_index=True,
             key="editor_detalles",
             column_config={
-                "Id Orden": st.column_config.NumberColumn("Id Orden", disabled=True),
-                "Id detalles": st.column_config.NumberColumn("Id detalles", disabled=True),
-                "Producto": st.column_config.TextColumn("Producto", disabled=True),
+                "Id Orden": st.column_config.NumberColumn("Id Orden"),
+                "Id detalles": st.column_config.NumberColumn("Id detalles"),
+                "Producto": st.column_config.TextColumn("Producto"),
                 "Detalle": st.column_config.SelectboxColumn("Detalle", help="Puedes cambiar el color o talla del producto si es necesario", options=opciones_disponbiles),
-                "Cantidad": st.column_config.NumberColumn("Cantidad", disabled=False, help="Puedes cambiar la cantidad del producto si es necesario")
-            }
+                "Cantidad": st.column_config.NumberColumn("Cantidad", help="Puedes cambiar la cantidad del producto si es necesario")
+            },
+            disabled=["Id Orden", "Id detalles", "Producto"]
         )
         if st.button("Guardar cambios"):
             cambios = st.session_state["editor_detalles"].get("edited_rows",{})
