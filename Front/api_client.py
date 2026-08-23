@@ -113,7 +113,7 @@ class APIClient:
                 st.error(f"Error al guardar los registros: {e}")
 
     def traer_productos(self):
-        url = f"{self.base_url}/inventarios/"
+        url = f"{self.base_url}/inventarios"
         try:
             response = requests.get(url=url, headers=self.headers)
             if response.status_code == 200:

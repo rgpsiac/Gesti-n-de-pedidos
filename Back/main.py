@@ -4,6 +4,7 @@ from Back.models.models import Base
 from Back.repositories.bd import engine
 import Back.models.models
 from Back.endpoints.endpoint_ordenes import router as router_ordenes
+from Back.endpoints.endpoint_stock import router as router_stock
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -15,6 +16,7 @@ app = FastAPI(
 )
 app.include_router(webhook_kits)
 app.include_router(router_ordenes)
+app.include_router(router_stock)
 @app.get('/')
 def home():
     return {"mensaje":"Servidor activo"}
