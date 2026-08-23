@@ -48,8 +48,6 @@ with st.popover(label="Agregar stock",
                 key="popover_forms_stock"):
     if "datos_formulario" not in st.session_state:
         st.session_state.datos_formulario = 1
-    if not datos.empty:
-        st.write("Columnas:", datos.columns.tolist())
     for i in range(st.session_state.datos_formulario):
         colp, cold, colc, colcu = st.columns(4)
         with colp:
