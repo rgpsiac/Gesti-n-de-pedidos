@@ -17,7 +17,7 @@ def agregar_inventario_endpoint(payload: DTOBInventarios, db: Session = Depends(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error procesando los datos: {str(e)}")
 
-@router.get("/")
+@router.get("")
 def traer_catalogo_productos_endpoint(db: Session = (Depends(get_db))):
     try:
         orquestador = RepositoryCatalogoProductos(db_session=db)
