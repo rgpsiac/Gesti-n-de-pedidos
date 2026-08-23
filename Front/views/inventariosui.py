@@ -12,6 +12,9 @@ if datos.empty:
     datos["detalle"] = "sin detalles"
 def agregar_fila():
     st.session_state.datos_formulario += 1
+def eliminar_fila():
+    if st.session_state.datos_formulario > 1:
+        st.session_state.datos_formulario -= 1
 
 
 col1, col2, col3 = st.columns(3)
@@ -43,26 +46,29 @@ with col3:
 with st.popover(label="Agregar stock",
                 type='primary',
                 disabled=False,
-                use_container_width=True,
+                use_container_width=False,
                 width='stretch',
                 key="popover_forms_stock"):
     if "datos_formulario" not in st.session_state:
         st.session_state.datos_formulario = 1
-    for i in range(st.session_state.datos_formulario):
-        colp, cold, colc, colcu = st.columns(4)
-        with colp:
-            producto = st.selectbox(label=f"Producto {i}", options=datos["producto"].unique(), key=f"producto_{i}")
-            detalles = datos[datos["producto"] == producto]["detalle"].tolist()
-        with cold:
-            st.selectbox(label=f"Detalle {i}", options=detalles, key=f"detalle_{i}")
-        with colc:
-            st.number_input(label=f"Cantidad {i}", min_value=1, value='min',key=f"cantidad_{i}")
-        with colcu:
-            st.number_input(label=f"Costo Unitario ($) {i}", min_value=0.0, value='min', step=0.10, format="%.2f", key=f"costou_{i}")
+    with st.container(height=300):
+        for i in range(st.session_state.datos_formulario):
+            colp, cold, colc, colcu = st.columns(4)
+            with colp:
+                producto = st.selectbox(label=f"Producto {i}", options=datos["producto"].unique(), key=f"producto_{i}")
+                detalles = datos[datos["producto"] == producto]["detalle"].tolist()
+            with cold:
+                st.selectbox(label=f"Detalle {i}", options=detalles, key=f"detalle_{i}")
+            with colc:
+                st.number_input(label=f"Cantidad {i}", min_value=1, value='min',key=f"cantidad_{i}")
+            with colcu:
+                st.number_input(label=f"Costo Unitario ($) {i}", min_value=0.0, value='min', step=0.10, format="%.2f", key=f"costou_{i}")
 
-    fila, guardado = st.columns(2)
+    fila, guardado, fila_del = st.columns(3)
     with fila:
         st.button("+ Agregar fila", on_click=agregar_fila, use_container_width=True)
+    with fila_del:
+        st.button("- Eliminar fila", on_click=eliminar_fila, use_container_width=True)
     with guardado:
         if st.button("Agregar stock", type='primary', use_container_width=True):
             payload = []
@@ -77,3 +83,5 @@ with st.popover(label="Agregar stock",
                 payload.append(registro)
             cliente_api.agregar_stock(datos=payload)
             st.toast("Stock agregado exitosamente")
+            st.session_state.datos_formulario = 1
+            st.rerun()
