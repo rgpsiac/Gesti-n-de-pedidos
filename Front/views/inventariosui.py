@@ -51,7 +51,8 @@ with st.popover(label="Agregar stock",
     for i in range(st.session_state.datos_formulario):
         colp, cold, colc, colcu = st.columns(4)
         with colp:
-            producto = st.selectbox(label=f"Producto {i}", options=["Mandil", "Cuchillo", "Guantes de plástico", "Guantes de nitrilo", "Bolsa", "Pijama quirúrgica antifluidos", "Gorro quirúrgico antifluidos"], key=f"producto_{i}")
+            productos = datos["producto"].tolist()
+            producto = st.selectbox(label=f"Producto {i}", options=productos, key=f"producto_{i}")
             detalles = datos[datos["producto"] == producto]["detalle"].tolist()
         with cold:
             st.selectbox(label=f"Detalle {i}", options=detalles, key=f"detalle_{i}")
