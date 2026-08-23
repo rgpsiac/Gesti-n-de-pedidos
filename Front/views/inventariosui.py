@@ -58,7 +58,7 @@ with st.popover(label="Agregar stock",
         with colc:
             st.number_input(label=f"Cantidad {i}", min_value=1, value='min',key=f"cantidad_{i}")
         with colcu:
-            st.number_input(label=f"Costo Unitario {i}", min_value=0.0, value='min', step=0.10, format="$%d", key=f"costou_{i}")
+            st.number_input(label=f"Costo Unitario ($) {i}", min_value=0.0, value='min', step=0.10, format="%.2f", key=f"costou_{i}")
 
     fila, guardado = st.columns(2)
     with fila:
