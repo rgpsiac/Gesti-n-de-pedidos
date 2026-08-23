@@ -65,5 +65,6 @@ class CatalogoProducto(Base):
     producto = Column(String, nullable=False)
     detalle = Column(String, nullable=False)
     precio = Column(Float, nullable=False, default=0.0)
+    disponibles = Column(Integer, nullable=False, default=0)
     detalle_orden = relationship("DetalleOrden", back_populates="cat_producto")
     info_inventario = relationship("Inventario", back_populates="cat_producto")

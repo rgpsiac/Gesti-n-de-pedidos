@@ -33,7 +33,7 @@ else:
             "Cliente": st.column_config.TextColumn("Nombre del cliente", disabled=False),
             "Teléfono": st.column_config.NumberColumn("Celular"),
             "Tipo de Pedido": st.column_config.TextColumn("Tipo de Pedido"),
-            "Total": st.column_config.NumberColumn("Precio"),
+            "Total": st.column_config.NumberColumn("Precio", format="$%d"),
             "Fecha de Entrega": st.column_config.SelectboxColumn("Fecha de Entrega",disabled=False, help="Elige la fecha por la que quieras actualizar el pedido", options=["Lunes 24 de agosto", "Viernes 28 de agosto", "Lunes 31 de agosto", "Viernes 4 de septiembre", "Lunes 7 de septiembre", "Viernes 11 de septiembre"]),
             "Pagado": st.column_config.NumberColumn("Pagado", format="$%d", min_value=0, disabled=False),
             "Deuda": st.column_config.NumberColumn("Deuda", format="$%d", min_value=0),

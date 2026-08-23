@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, field_validator
-from datetime import datetime
+from datetime import datetime, date
 
 
 class DTOBSheets(BaseModel):
@@ -64,3 +64,10 @@ class DTOBSheets(BaseModel):
         if isinstance(valor_original, str) and valor_original.strip() == "":
             return 0
         return valor_original
+
+class DTOBInventarios(BaseModel):
+    producto: str = Field(alias="Producto")
+    detalle: str = Field(alias="Detalle")
+    cantidad: int = Field(alias="Cantidad", default=0)
+    costo_unitario: float = Field(alias="Costo Unitario", default=0.0)
+    fecha_registro: date|str = Field(alias="Fecha de registro",default=None)

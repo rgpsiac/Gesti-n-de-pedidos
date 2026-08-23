@@ -39,9 +39,8 @@ else:
 
     paginas = [
         st.Page("views/principalui.py", title="Resumen General"),
-        st.Page("views/pedidosui.py", title="Gestión de Pedidos"),
-        st.Page("views/inventariosui.py", title="Gestión de Inventarios")
+        st.Page("views/pedidosui.py", title="Pedidos"),
+        st.Page("views/inventariosui.py", title="Inventarios")
     ]
-    navegador = st.navigation(pages=paginas,
-                              position='top')
+    navegador = st.navigation(pages=paginas, position='top')
     navegador.run()

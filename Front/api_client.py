@@ -1,5 +1,6 @@
 import requests
 import streamlit as st
+import pandas as pd
 
 class APIClient:
     def __init__(self):
@@ -95,3 +96,30 @@ class APIClient:
         except requests.exceptions.ConnectionError:
             st.error("Error crítico. No se pudo conectar con el servidor")
             return False
+
+    def agregar_stock(self, datos: list):
+        url = f"{self.base_url}/inventarios"
+        errores = []
+        for dato in datos:
+            try:
+                response = requests.post(url=url, json=dato)
+                if response.status_code != 200:
+                    errores.append({"registro":dato, "error": response.text})
+                    st.error(f"No fue posible guardar el registro {dato}")
+            except requests.exceptions.ConnectionError:
+                st.error("Error crítico. No se pudo conectar con el servidor")
+            except Exception as e:
+                errores.append({"registro": dato, "error": str(e)})
+                st.error(f"Error al guardar los registros: {e}")
+
+    def traer_productos(self):
+        url = f"{self.base_url}/inventarios"
+        try:
+            response = requests.get(url=url)
+            if response.status_code == 200:
+                datos = response.json()
+                return pd.DataFrame(datos)
+            else:
+                return pd.DataFrame()
+        except Exception:
+            return pd.DataFrame()

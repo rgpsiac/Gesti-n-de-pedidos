@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
-from Back.models.dtos_tipoa import ClienteRequest, OrdenRequest, DetalleOrdenRequest, DetalleOrdenResponse, OrdenResponse
-from Back.models.models import Cliente, Orden, DetalleOrden, CatalogoProducto, CatalogoPedido
+from Back.models.dtos_tipoa import ClienteRequest, OrdenRequest, DetalleOrdenRequest, DetalleOrdenResponse, OrdenResponse, InventarioRequest
+from Back.models.dtos_tipob import DTOBInventarios
+from Back.models.models import Cliente, Orden, DetalleOrden, CatalogoProducto, CatalogoPedido, Inventario
 from typing import List
 
 # Este archivo almacena las clases que se emplearán en el pipeline de google sheets
@@ -109,3 +110,17 @@ class RepositoryCatalogoProductos:
         if not resultado:
             return 0.0
         return resultado.precio
+    def agregar_inventario(self, stock: InventarioRequest):
+        datos_dto = stock.model_dump()
+        stock = Inventario(**datos_dto)
+        self.db.add(stock)
+        self.db.flush()
+        self.db.refresh(stock)
+        return stock
+    def traer_stock(self):
+        return self.db.query(CatalogoProducto).all()
+    def agregar_stock(self, id_producto: int, cantidad: int):
+        nuevo_stock = self.db.query(CatalogoProducto).filter(
+            CatalogoProducto.id_producto == id_producto
+        ).update({"disponibles":CatalogoProducto.disponibles + cantidad})
+        return nuevo_stock

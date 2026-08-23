@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field, field_validator, ConfigDict, EmailStr
 from typing import Optional, List
-from datetime import datetime
+from datetime import date
 
 class ClienteBase(BaseModel):
     nombre: str = Field(min_length=2)
@@ -55,7 +55,7 @@ class InventarioBase(BaseModel):
     detalle: str
     cantidad_ingresada: int = Field(ge=0, default=0)
     costo_unitario: float = Field(ge=0, default=0.0)
-    fecha_registro: datetime
+    fecha_registro: date
 
 class InventarioRequest(InventarioBase):
     id_producto: int
@@ -79,9 +79,10 @@ class CatalogoProductoBase(BaseModel):
     producto: str
     detalle: str
     precio: float = Field(default=0.0)
+    disponibles: int = Field(default=0)
 
 class CatalogoProductoRequest(CatalogoProductoBase):
-    pass
+    id_producto: int
 
 class CatalogoProductoResponse(CatalogoProductoBase):
     id_producto: int
