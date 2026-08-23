@@ -102,7 +102,7 @@ class APIClient:
         errores = []
         for dato in datos:
             try:
-                response = requests.post(url=url, json=dato)
+                response = requests.post(url=url, json=dato, headers=self.headers)
                 if response.status_code != 200:
                     errores.append({"registro":dato, "error": response.text})
                     st.error(f"No fue posible guardar el registro {dato}")
@@ -115,7 +115,7 @@ class APIClient:
     def traer_productos(self):
         url = f"{self.base_url}/inventarios"
         try:
-            response = requests.get(url=url)
+            response = requests.get(url=url, headers=self.headers)
             if response.status_code == 200:
                 datos = response.json()
                 return pd.DataFrame(datos)

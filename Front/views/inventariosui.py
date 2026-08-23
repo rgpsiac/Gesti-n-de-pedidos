@@ -6,7 +6,10 @@ import pandas as pd
 
 st.title("Gestión del Inventario")
 cliente_api = APIClient()
-
+datos = cliente_api.traer_productos()
+if datos.empty:
+    datos["producto"] = "sin productos"
+    datos["detalle"] = "sin detalles"
 def agregar_fila():
     st.session_state.datos_formulario += 1
 
@@ -43,7 +46,6 @@ with st.popover(label="Agregar stock",
                 use_container_width=True,
                 width='content',
                 key="popover_forms_stock"):
-    datos = cliente_api.traer_productos()
     if "datos_formulario" not in st.session_state:
         st.session_state.datos_formulario = 1
     for i in range(st.session_state.datos_formulario):
