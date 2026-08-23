@@ -48,11 +48,12 @@ with st.popover(label="Agregar stock",
                 key="popover_forms_stock"):
     if "datos_formulario" not in st.session_state:
         st.session_state.datos_formulario = 1
+    if not datos.empty:
+        st.write("Columnas:", datos.columns.tolist())
     for i in range(st.session_state.datos_formulario):
         colp, cold, colc, colcu = st.columns(4)
         with colp:
-            productos = datos["producto"].tolist()
-            producto = st.selectbox(label=f"Producto {i}", options=productos, key=f"producto_{i}")
+            producto = st.selectbox(label=f"Producto {i}", options=datos["producto"].unique(), key=f"producto_{i}")
             detalles = datos[datos["producto"] == producto]["detalle"].tolist()
         with cold:
             st.selectbox(label=f"Detalle {i}", options=detalles, key=f"detalle_{i}")
