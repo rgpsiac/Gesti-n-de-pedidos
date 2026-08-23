@@ -47,7 +47,7 @@ with st.popover(label="Agregar stock",
     if "datos_formulario" not in st.session_state:
         st.session_state.datos_formulario = 1
     for i in range(st.session_state.datos_formulario):
-        colp, cold, colc, colcu = st.columns()
+        colp, cold, colc, colcu = st.columns(4)
         with colp:
             producto = st.selectbox(label=f"Producto {i}", options=["Mandil", "Cuchillo", "Guantes de plástico", "Guantes de nitrilo", "Bolsa", "Pijama quirúrgica antifluidos", "Gorro quirúrgico antifluidos"], key=f"producto_{i}")
             detalles = datos[datos["producto"] == producto]["detalle"]
