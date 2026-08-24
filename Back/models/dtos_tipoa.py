@@ -5,7 +5,7 @@ from datetime import date
 class ClienteBase(BaseModel):
     nombre: str = Field(min_length=2)
     telefono: str|None = Field(max_length=15)
-    canal_entrada: str|None = Field(default=None)
+    canal_entrada: str|None = Field(default="Pendiente")
 
 class ClienteRequest(ClienteBase):
     pass    
@@ -21,6 +21,7 @@ class OrdenBase(BaseModel):
     precio_total: float = Field(ge=0, default=0.0)
     pagado: float = Field(ge=0, default=0.0)
     estatus: str
+    asignacion: str|None = Field(default="Pendiente")
 
 class OrdenRequest(OrdenBase):
     id_cliente: int
@@ -39,6 +40,7 @@ class DetalleOrdenBase(BaseModel):
     pertenencia: str = Field(default="Kit 1")
     precio_unitario: float = Field(default=0.0)
     subtotal: float = Field(default=0.0)
+    asignacion: str|None = Field(default="Pendiente")
 
 class DetalleOrdenRequest(DetalleOrdenBase):
     id_orden: int
@@ -80,6 +82,7 @@ class CatalogoProductoBase(BaseModel):
     detalle: str
     precio: float = Field(default=0.0)
     disponibles: int = Field(default=0)
+    costo_unitario: float = Field(default=0.0)
 
 class CatalogoProductoRequest(CatalogoProductoBase):
     id_producto: int
@@ -87,6 +90,12 @@ class CatalogoProductoRequest(CatalogoProductoBase):
 class CatalogoProductoResponse(CatalogoProductoBase):
     id_producto: int
     model_config = ConfigDict(from_attributes=True)
+
+class ItemsAsignadosPost(BaseModel):
+    id_asignacion: int|None = Field(default=0)
+    id_producto: int
+    id_detalle: int
+    cantidad_asignada: int
 
 class PatchEstadoOrden(BaseModel):
     id_orden: int|None = Field(default=None)
@@ -108,3 +117,7 @@ class PatchNombre(BaseModel):
 class PatchPago(BaseModel):
     id_orden: int|None = Field(default=None)
     pago: float
+
+class PatchCanal(BaseModel):
+    id_orden: int|None = Field(default=None)
+    canal: str = Field(default="Pendiente")

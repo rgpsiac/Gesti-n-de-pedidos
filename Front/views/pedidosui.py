@@ -4,10 +4,40 @@ from api_client import APIClient
 import plotly.express as px
 import time
 
-st.title("Gestión de Pedidos")
+st.title("Gestión de Pedidos", text_alignment='center')
 cliente_api = APIClient()
 with st.spinner("Obteniendo Pedidos..."):
     ordenes = cliente_api.obtener_ordenes()
+    metricas = cliente_api.traer_metricas()
+
+kpi1, kpi2, kpi3 = st.columns(3)
+with kpi1:
+    kpi_pedidos = metricas.get("pedidos",0)
+    st.metric(
+        label="Pedidos",
+        value=kpi_pedidos,
+        border=True,
+        width='stretch'
+    )
+
+with kpi2:
+    kpi_entregados = metricas.get("pedidos entregados",0)
+    st.metric(
+        label="Entregados",
+        value=kpi_entregados,
+        border=True,
+        width='stretch'
+    )
+
+with kpi3:
+    kpi_pendientes = metricas.get("pedidos pendientes")
+    st.metric(
+        label="Pendientes",
+        value=kpi_pendientes,
+        border=True,
+        width='stretch'
+    )
+
 
 if len(ordenes) == 0:
     st.info("No hay órdenes registradas en el sistema")
@@ -16,7 +46,7 @@ else:
     st.subheader("Registro de Pedidos")
     df = pd.DataFrame(ordenes)
 
-    columnas_editor_ordenes = ["Id Orden", "Id Cliente", "Cliente", "Teléfono", "Tipo de Pedido", "Estatus", "Fecha de Entrega", "Total", "Pagado", "Deuda"]
+    columnas_editor_ordenes = ["Id Orden", "Id Cliente", "Cliente", "Teléfono", "Canal", "Tipo de Pedido", "Estatus", "Fecha de Entrega", "Total", "Pagado", "Deuda", "Asignacion Orden"]
 
     df_ordenes = df[columnas_editor_ordenes].drop_duplicates(subset="Id Orden").reset_index(drop=True)
     if "Explorar" not in df_ordenes.columns:
@@ -29,18 +59,20 @@ else:
         hide_index=True,
         key="editor_ordenes",
         column_config={
-            "Id Orden": st.column_config.NumberColumn("ID"),
+            "Id Orden": None,
             "Cliente": st.column_config.TextColumn("Nombre del cliente", disabled=False),
             "Teléfono": st.column_config.NumberColumn("Celular"),
+            "Canal": st.column_config.TextColumn("Canal de entrada"),
             "Tipo de Pedido": st.column_config.TextColumn("Tipo de Pedido"),
             "Total": st.column_config.NumberColumn("Precio", format="$%d"),
             "Fecha de Entrega": st.column_config.SelectboxColumn("Fecha de Entrega",disabled=False, help="Elige la fecha por la que quieras actualizar el pedido", options=["Lunes 24 de agosto", "Viernes 28 de agosto", "Lunes 31 de agosto", "Viernes 4 de septiembre", "Lunes 7 de septiembre", "Viernes 11 de septiembre"]),
             "Pagado": st.column_config.NumberColumn("Pagado", format="$%d", min_value=0, disabled=False),
             "Deuda": st.column_config.NumberColumn("Deuda", format="$%d", min_value=0),
             "Estatus": st.column_config.SelectboxColumn("Estatus", help="Cambia el Estatus según el avance del pedido", required=True, options=["Pendiente", "En proceso", "Empacado", "Entregado", "Devuelto por cambios"]),
+            "Asignacion Orden": st.column_config.TextColumn("Asignacion"),
             "Explorar": st.column_config.CheckboxColumn(label="Ver detalles",width='small', pinned=True, default=False),
             "Id Cliente": None},
-            disabled=["Id Orden","Teléfono","Tipo de Pedido","Total","Deuda", "Id Cliente"])
+            disabled=["Id Orden","Teléfono","Tipo de Pedido","Total","Deuda", "Id Cliente", "Asignacion Orden"])
 
     if st.button("Guardar Cambios"):
         cambios = st.session_state["editor_ordenes"].get("edited_rows",{})
@@ -73,7 +105,7 @@ else:
     if not fila_marcada.empty:
         id_selected = fila_marcada.iloc[0]["Id Orden"]
 
-        columnas_editor_detalles = ["Id Orden", "Id detalles", "Producto", "Detalle", "Cantidad", "Pertenencia"]
+        columnas_editor_detalles = ["Id Orden", "Id detalles", "Producto", "Detalle", "Cantidad", "Pertenencia", "Asignacion Detalles"]
 
         df_detalles = df[df["Id Orden"] == id_selected]
         df_detalles = df_detalles[columnas_editor_detalles]
@@ -105,9 +137,10 @@ else:
                 "Id detalles": None,
                 "Producto": st.column_config.TextColumn("Producto"),
                 "Detalle": st.column_config.SelectboxColumn("Detalle", help="Puedes cambiar el color o talla del producto si es necesario", options=opciones_disponbiles),
-                "Cantidad": st.column_config.NumberColumn("Cantidad", help="Puedes cambiar la cantidad del producto si es necesario")
+                "Cantidad": st.column_config.NumberColumn("Cantidad", help="Puedes cambiar la cantidad del producto si es necesario"),
+                "Asignacion Detalles": st.column_config("Asignacion")
             },
-            disabled=["Id Orden", "Id detalles", "Producto", "Pertenencia"]
+            disabled=["Id Orden", "Id detalles", "Producto", "Pertenencia", "Asignacion Detalles"]
         )
         if st.button("Guardar cambios"):
             cambios = st.session_state["editor_detalles"].get("edited_rows",{})

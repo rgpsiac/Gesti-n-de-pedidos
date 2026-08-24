@@ -1,7 +1,8 @@
 from sqlalchemy.orm import Session
-from Back.models.dtos_tipoa import ClienteRequest, OrdenRequest, DetalleOrdenRequest, DetalleOrdenResponse, OrdenResponse, InventarioRequest
+from sqlalchemy import func, case
+from Back.models.dtos_tipoa import ClienteRequest, OrdenRequest, DetalleOrdenRequest, DetalleOrdenResponse, OrdenResponse, InventarioRequest, ItemsAsignadosPost
 from Back.models.dtos_tipob import DTOBInventarios
-from Back.models.models import Cliente, Orden, DetalleOrden, CatalogoProducto, CatalogoPedido, Inventario
+from Back.models.models import Cliente, Orden, DetalleOrden, CatalogoProducto, CatalogoPedido, Inventario, ItemsAsignados
 from typing import List
 
 # Este archivo almacena las clases que se emplearán en el pipeline de google sheets
@@ -33,6 +34,12 @@ class RepositoryClientes():
         fila_afectada = self.db.query(Cliente).filter(
             Cliente.id_cliente == id_cliente
         ).update(nombre)
+        return fila_afectada
+
+    def actualizar_canal_entrada(self, id_cliente: int, canal: dict):
+        fila_afectada = self.db.query(Cliente).filter(
+            Cliente.id_cliente == id_cliente
+        ).update(canal)
         return fila_afectada
 
 
@@ -83,6 +90,68 @@ class RepositoryOrdenes():
         ).update(items)
         return items_cambiados
 
+    def detalles_pendientes(self):
+        return self.db.query(DetalleOrden).filter(
+            DetalleOrden.asignacion == "Pendiente",
+        ).order_by(DetalleOrden.id_detalle.asc()).all()
+    def actualizar_asignacion_detalle(self, id_detalle: int):
+        query = self.db.query(DetalleOrden).filter(
+            DetalleOrden.id_detalle == id_detalle
+        ).update({"asignacion":"Asignado"})
+        return query
+    def evaluacion_asignaciones(self, id_orden: int):
+        return self.db.query(DetalleOrden).filter(
+            DetalleOrden.id_orden == id_orden
+        ).all()
+    def actualizar_asignacion_orden(self, id_orden: int, estado: str):
+        operacion = self.db.query(Orden).filter(
+            Orden.id_orden == id_orden
+        ).update({"asignacion":estado})
+        return operacion
+
+    def metricas_ordenes(self):
+        metricas = self.db.query(
+            func.count(Orden.id_orden),
+            func.sum(Orden.pagado),
+            func.sum(Orden.precio_total) - func.sum(Orden.pagado),
+            func.sum(case((Orden.estatus == "Entregado",1), else_=0)),
+            func.sum(case((Orden.estatus == "Pendiente",1), else_=0)),
+            func.sum(Orden.precio_total)
+        ).first()
+        return metricas
+
+    def costos_totales(self):
+        costo = self.db.query(
+            func.sum(DetalleOrden.costo_unitario)
+        ).scalar()
+        return costo
+
+    def items_faltantes(self):
+        items = self.db.query(
+            DetalleOrden.id_producto,
+            func.sum(DetalleOrden.cantidad)
+        ).filter(
+            DetalleOrden.asignacion == "Pendiente"
+        ).group_by(
+            DetalleOrden.id_producto
+        ).all()
+        return items
+
+    def items_cubiertos(self):
+        items = self.db.query(
+            func.sum(case((DetalleOrden.asignacion == "Asignado",1), else_=0)),
+            func.sum(case((DetalleOrden.asignacion == "Pendiente",1), else_=0))
+        ).first()
+        return items
+
+    def estatus_pedidos(self):
+        pedidos = self.db.query(
+            func.sum(case((Orden.asignacion == "Pendiente",1),else_=0)),
+            func.sum(case((Orden.asignacion == "Parcialmente Asignado",1),else_=0)),
+            func.sum(case((Orden.asignacion == "Asignado",1),else_=0))
+        ).first()
+        return pedidos
+
 
 class RepositoryCatalogoProductos:
     def __init__(self, db_session: Session):
@@ -124,3 +193,23 @@ class RepositoryCatalogoProductos:
             CatalogoProducto.id_producto == id_producto
         ).update({"disponibles":CatalogoProducto.disponibles + cantidad})
         return nuevo_stock
+
+    def stock_to_dict(self) -> dict:
+        query = self.db.query(CatalogoProducto).all()
+        diccionario = {key.id_producto: key.disponibles for key in query}
+        return diccionario
+    def actualizar_stock(self, id_producto: int, cantidad: int):
+        query = self.db.query(CatalogoProducto).filter(
+            CatalogoProducto.id_producto == id_producto
+        ).update({"disponibles":CatalogoProducto.disponibles- cantidad})
+        return query
+    def asignar_items(self, id_producto: int, id_detalle: int, cantidad: int):
+        asignacion = ItemsAsignados(
+            id_producto=id_producto,
+            id_detalle=id_detalle,
+            cantidad_asignada=cantidad
+        )
+        self.db.add(asignacion)
+        self.db.flush()
+        self.db.refresh(asignacion)
+        return asignacion

@@ -61,6 +61,15 @@ class ServiceOrdenes:
         fila_afectada = self.repo_clientes.actualizar_nombre(id_cliente=id_del_cliente, nombre=atributos_cliente)
         return fila_afectada
 
+    def actualizar_canal(self, id_orden: int, nuevo_canal: str) -> int:
+        info_orden = self.repo_ordenes.traer_info_orden(id_orden=id_orden)
+        if not info_orden:
+            raise ValueError("La orden no existe")
+        id_cliente = info_orden.id_cliente
+        atributos_cliente = {"canal_entrada": nuevo_canal}
+        fila_afectada = self.repo_clientes.actualizar_canal_entrada(id_cliente=id_cliente, canal=atributos_cliente)
+        return fila_afectada
+
     def unir_columnas(self) -> List[dict]:
         ordenes = self.repo_ordenes.traer_ordenes()
         filas = []
@@ -75,6 +84,7 @@ class ServiceOrdenes:
                     "Id Cliente": orden.id_cliente,
                     "Cliente": orden.info_cliente.nombre,
                     "Teléfono": orden.info_cliente.telefono,
+                    "Canal": orden.info_cliente.canal_entrada,
                     "Tipo de Pedido": orden.tipo_pedido,
                     "Estatus": orden.estatus,
                     "Fecha de Entrega": orden.fecha_entrega,
@@ -85,7 +95,9 @@ class ServiceOrdenes:
                     "Total": orden.precio_total,
                     "Pagado": orden.pagado,
                     "Deuda": deuda,
-                    "Id detalles": detalle.id_detalle
+                    "Id detalles": detalle.id_detalle,
+                    "Asignacion Orden": orden.asignacion,
+                    "Asignacion Detalles": detalle.asignacion
                 }
                 filas.append(fila)
         return filas

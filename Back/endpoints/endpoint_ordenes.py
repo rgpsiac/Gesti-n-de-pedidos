@@ -4,7 +4,7 @@ from typing import List, Dict, Any
 from Back.repositories.bd import get_db
 from Back.services.services_ordenes import ServiceOrdenes
 from Back.repositories.repositories import RepositoryOrdenes
-from Back.models.dtos_tipoa import OrdenResponse, DetalleOrdenResponse, OrdenRequest, DetalleOrdenRequest, PatchDetallesOrden, PatchEstadoOrden, PatchFechaEntrega, PatchNombre, PatchPago
+from Back.models.dtos_tipoa import OrdenResponse, DetalleOrdenResponse, OrdenRequest, DetalleOrdenRequest, PatchDetallesOrden, PatchEstadoOrden, PatchFechaEntrega, PatchNombre, PatchPago, PatchCanal
 from Back.utils.api_verification import verificar_api
 
 router = APIRouter(prefix="/api/v1/ordenes", tags=["Gestión de pedidos"], dependencies=[Depends(verificar_api)])
@@ -56,6 +56,21 @@ def actualizar_nombre_endpoint(id_orden: int, payload: PatchNombre, db: Session 
             raise HTTPException(status_code=404, detail="La orden no existe")
         db.commit()
         return {"mensaje": "Nombre del cliente actualizado con éxito"}
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve))
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.patch("/{id_orden}/canal")
+def actualizar_canal_endpoint(id_orden: int, payload: PatchCanal, db: Session = Depends(get_db)):
+    try:
+        servicio = ServiceOrdenes(db=db)
+        nuevo_canal = servicio.actualizar_canal(id_orden=id_orden, nuevo_canal=payload.canal)
+        if nuevo_canal == 0:
+            raise HTTPException(status_code=404, detail="La orden no existe")
+        db.commit()
+        return {"mensaje":"Canal del cliente actualizado con éxito"}
     except ValueError as ve:
         raise HTTPException(status_code=400, detail=str(ve))
     except Exception as e:

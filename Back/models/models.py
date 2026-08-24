@@ -8,7 +8,7 @@ class Cliente(Base):
     id_cliente = Column(Integer, primary_key=True, autoincrement=True, unique=True, nullable=False)
     nombre = Column(String, nullable=False)
     telefono = Column(String, nullable=False)
-    canal_entrada = Column(String, nullable=False)
+    canal_entrada = Column(String, nullable=False, default="Pendiente")
     info_orden = relationship("Orden", back_populates="info_cliente")
 
 class Orden(Base):
@@ -21,6 +21,7 @@ class Orden(Base):
     precio_total = Column(Float, nullable=False)
     pagado = Column(Float, nullable=False, default=0.0)
     estatus = Column(String, nullable=False, default="Pendiente")
+    asignacion = Column(String, default="Pendiente", nullable=False)
     info_cliente = relationship("Cliente", back_populates="info_orden")
     detalle_orden = relationship("DetalleOrden", back_populates="info_orden")
 
@@ -37,9 +38,12 @@ class DetalleOrden(Base):
     pertenencia = Column(String, nullable=False)
     precio_unitario = Column(Float, nullable=False, default=0.0)
     subtotal = Column(Float, nullable=False, default=0.0)
+    asignacion = Column(String, default="Pendiente", nullable=False)
+    costo_unitario = Column(Float, nullable=False, default=0.0)
     info_orden = relationship("Orden", back_populates="detalle_orden")
     cat_producto = relationship("CatalogoProducto", back_populates="detalle_orden")
     cat_pedido = relationship("CatalogoPedido", back_populates="detalle_orden")
+    item_detalle = relationship("ItemsAsignados", back_populates="item_detalle")
 
 class Inventario(Base):
     __tablename__ = "inventario"
@@ -66,5 +70,16 @@ class CatalogoProducto(Base):
     detalle = Column(String, nullable=False)
     precio = Column(Float, nullable=False, default=0.0)
     disponibles = Column(Integer, nullable=False, default=0)
+    costo_unitario = Column(Float, nullable=False, default=0.0)
     detalle_orden = relationship("DetalleOrden", back_populates="cat_producto")
     info_inventario = relationship("Inventario", back_populates="cat_producto")
+    item_producto = relationship("ItemsAsignados", back_populates="item_producto")
+
+class ItemsAsignados(Base):
+    __tablename__ = "items_asignados"
+    id_asignacion = Column(Integer, primary_key=True, unique=True, nullable=False)
+    id_producto = Column(Integer, ForeignKey("catalogo_productos.id_producto"))
+    id_detalle = Column(Integer, ForeignKey("detalles_orden.id_detalle"))
+    cantidad_asignada = Column(Integer, nullable=False, default=0)
+    item_detalle = relationship("DetalleOrden", back_populates="item_detalle")
+    item_producto = relationship("CatalogoProducto", back_populates="item_producto")

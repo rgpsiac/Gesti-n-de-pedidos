@@ -123,3 +123,22 @@ class APIClient:
                 return pd.DataFrame()
         except Exception:
             return pd.DataFrame()
+
+    def traer_metricas(self):
+        url = f"{self.base_url}/metricas"
+        try:
+            response = requests.get(
+                url=url,
+                headers=self.headers
+            )
+            if response.status_code == 200:
+                datos = response.json()
+                return datos
+            else:
+                st.error(f"No fue posible establecer conexión con la API. Error {response.status_code}: {response.text}") 
+                return {}
+        except requests.exceptions.ConnectionError:
+                st.error(f"Error crítico. No fue posible conectarse con el servidor. Verifique que esté encendido")
+                return {}
+        except Exception:
+            return {}

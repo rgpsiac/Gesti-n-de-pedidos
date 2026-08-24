@@ -5,43 +5,66 @@ from api_client import APIClient
 import pandas as pd
 
 st.title("Gestión del Inventario")
-cliente_api = APIClient()
-datos = cliente_api.traer_productos()
-if datos.empty:
-    datos["producto"] = "sin productos"
-    datos["detalle"] = "sin detalles"
-def agregar_fila():
-    st.session_state.datos_formulario += 1
-def eliminar_fila():
-    if st.session_state.datos_formulario > 1:
-        st.session_state.datos_formulario -= 1
+with st.spinner("Cargando..."):
+    cliente_api = APIClient()
+    datos = cliente_api.traer_productos()
+    metricas = cliente_api.traer_metricas()
 
+    if datos.empty:
+        datos["producto"] = "sin productos"
+        datos["detalle"] = "sin detalles"
+    def agregar_fila():
+        st.session_state.datos_formulario += 1
+    def eliminar_fila():
+        if st.session_state.datos_formulario > 1:
+            st.session_state.datos_formulario -= 1
+
+
+    productos_cubiertos = metricas.get("Items faltantes",{})
+    data_productos_cubiertos = pd.DataFrame(list(productos_cubiertos.items()), columns=["Id Producto", "Cantidad"])
 
 col1, col2, col3 = st.columns(3)
 with col1:
+    kpi_pedidos = metricas.get("pedidos",0)
     st.metric(
         label="Pedidos",
-        value=0,
+        value=kpi_pedidos,
         border=True,
-        width='stretch',
-        delta_description="Trabajando!"
+        width='stretch'
         )
+    
 with col2:
+    kpi_costos = metricas.get("costos",0)
     st.metric(
         label="Costos",
-        value=0,
+        value=kpi_costos,
         border=True,
-        height='stretch',
-        delta_description="Trabajando!"
+        height='stretch'
     )
+
 with col3:
+    faltantes = metricas.get("Items",0)
+    kpi_items_faltantes = faltantes.get("Pendiente",0)
     st.metric(
         label="Items faltantes",
-        value=0,
+        value=kpi_items_faltantes,
         border=True,
         width='stretch',
         delta_description="Trabajando!"
     )
+
+if not data_productos_cubiertos.empty:
+    graph_productos_cubiertos = px.bar(
+        data_frame=data_productos_cubiertos,
+        x=data_productos_cubiertos["Id Producto"],
+        y=data_productos_cubiertos["Cantidad"]
+    )
+    st.plotly_chart(
+        figure_or_data=graph_productos_cubiertos,
+        use_container_width=True
+    )
+else:
+    st.info("Aquí aparecerán los items faltantes")
 
 with st.popover(label="Agregar stock",
                 type='primary',
