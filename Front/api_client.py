@@ -125,7 +125,7 @@ class APIClient:
             return pd.DataFrame()
 
     def traer_metricas(self):
-        url = f"{self.base_url}/metricas"
+        url = f"{self.base_url}/metricas/"
         try:
             response = requests.get(
                 url=url,
