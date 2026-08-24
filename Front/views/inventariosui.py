@@ -4,7 +4,7 @@ from datetime import date
 from api_client import APIClient
 import pandas as pd
 
-st.title("Gestión del Inventario")
+st.title("Gestión del Inventario", text_alignment='center')
 with st.spinner("Cargando..."):
     cliente_api = APIClient()
     datos = cliente_api.traer_productos()
