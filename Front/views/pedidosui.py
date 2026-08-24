@@ -138,7 +138,7 @@ else:
                 "Producto": st.column_config.TextColumn("Producto"),
                 "Detalle": st.column_config.SelectboxColumn("Detalle", help="Puedes cambiar el color o talla del producto si es necesario", options=opciones_disponbiles),
                 "Cantidad": st.column_config.NumberColumn("Cantidad", help="Puedes cambiar la cantidad del producto si es necesario"),
-                "Asignacion Detalles": st.column_config("Asignacion")
+                "Asignacion Detalles": st.column_config.TextColumn("Asignacion")
             },
             disabled=["Id Orden", "Id detalles", "Producto", "Pertenencia", "Asignacion Detalles"]
         )

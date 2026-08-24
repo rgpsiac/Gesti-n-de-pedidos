@@ -39,7 +39,8 @@ with col2:
         label="Costos",
         value=kpi_costos,
         border=True,
-        height='stretch'
+        height='stretch',
+        format='dollar'
     )
 
 with col3:
@@ -49,8 +50,7 @@ with col3:
         label="Items faltantes",
         value=kpi_items_faltantes,
         border=True,
-        width='stretch',
-        delta_description="Trabajando!"
+        width='stretch'
     )
 
 if not data_productos_cubiertos.empty:
