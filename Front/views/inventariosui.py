@@ -21,7 +21,7 @@ with st.spinner("Cargando..."):
 
 
     productos_cubiertos = metricas.get("Items faltantes",{})
-    data_productos_cubiertos = pd.DataFrame(list(productos_cubiertos.items()), columns=["Id Producto", "Cantidad"])
+    data_productos_cubiertos = pd.DataFrame(productos_cubiertos)
 
 col1, col2, col3 = st.columns(3)
 with col1:
@@ -54,11 +54,14 @@ with col3:
     )
 
 if not data_productos_cubiertos.empty:
-    graph_productos_cubiertos = px.bar(
+    graph_productos_cubiertos = px.treemap(
         data_frame=data_productos_cubiertos,
-        x=data_productos_cubiertos["Id Producto"],
-        y=data_productos_cubiertos["Cantidad"]
+        path=["Producto", "Detalle"],
+        values="Cantidad",
+        title="Items Faltantes",
+        color="Producto"
     )
+    graph_productos_cubiertos.update_traces(textinfo='label+value')
     st.plotly_chart(
         figure_or_data=graph_productos_cubiertos,
         use_container_width=True

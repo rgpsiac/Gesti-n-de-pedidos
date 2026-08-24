@@ -128,12 +128,14 @@ class RepositoryOrdenes():
 
     def items_faltantes(self):
         items = self.db.query(
-            DetalleOrden.id_producto,
+            DetalleOrden.producto,
+            DetalleOrden.detalle,
             func.sum(DetalleOrden.cantidad)
         ).filter(
             DetalleOrden.asignacion == "Pendiente"
         ).group_by(
-            DetalleOrden.id_producto
+            DetalleOrden.producto,
+            DetalleOrden.detalle
         ).all()
         return items
 

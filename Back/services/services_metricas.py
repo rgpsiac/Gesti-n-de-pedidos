@@ -17,7 +17,15 @@ class ServiceMetricas:
 
         pedidos_cubiertos = self.repo_ordenes.estatus_pedidos()
 
-        items_faltantes = dict(self.repo_ordenes.items_faltantes())
+        items_faltantes_crudos = self.repo_ordenes.items_faltantes()
+        items_faltantes = []
+        for item in items_faltantes_crudos:
+            registro = {
+                "Producto": item[0],
+                "Detalle": item[1],
+                "Cantidad": item[2]
+            }
+            items_faltantes.append(registro)
 
         kpi_pedidos = metricas[0]
         kpi_adelantos = metricas[1]
