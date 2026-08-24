@@ -9,6 +9,7 @@ with st.spinner("Cargando..."):
     cliente_api = APIClient()
     datos = cliente_api.traer_productos()
     metricas = cliente_api.traer_metricas()
+    st.write(metricas)
 
     if datos.empty:
         datos["producto"] = "sin productos"
