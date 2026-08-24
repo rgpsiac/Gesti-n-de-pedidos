@@ -15,7 +15,7 @@ with st.spinner("Cargando dashboard..."):
         st.error("Ha ocurrido un problema con el servidor")
         st.stop()
 
-kpi1, kpi2, kpi3, kpi4, kpi5 = st.columns(5)
+kpi1, kpi2, kpi3, kpi4, kpi5, kpi6 = st.columns(6)
 
 with kpi1:
     kpi_pedidos = metricas.get("pedidos",0)
@@ -25,6 +25,17 @@ with kpi1:
         border=True,
         width='stretch'
     )
+
+with kpi6:
+    kpi_ingresos = metricas.get("Ingresos",0)
+    st.metric(
+        label="Ingresos",
+        value=kpi_ingresos,
+        border=True,
+        width='stretch',
+        format='dollar'
+    )
+
 
 with kpi2:
     kpi_adelantos = metricas.get("adelantos",0)

@@ -28,6 +28,7 @@ class ServiceMetricas:
         kpi_pendientes = metricas[4]
         kpi_pedidos_cubiertos = {"Pendiente":pedidos_cubiertos[0], "Parcialmente Asignado":pedidos_cubiertos[1],"Asignado":pedidos_cubiertos[2]}
         kpi_items = {"Asignado":items_cubiertos[0],"Pendiente":items_cubiertos[1]}
+        kpi_ingresos = metricas[5]
 
 
         kpi_dict = {
@@ -40,5 +41,6 @@ class ServiceMetricas:
             "pedidos pendientes":kpi_pendientes,
             "Items": kpi_items,
             "Pedidos cubiertos": kpi_pedidos_cubiertos,
-            "Items faltantes": items_faltantes}
+            "Items faltantes": items_faltantes,
+            "Ingresos":kpi_ingresos}
         return kpi_dict
