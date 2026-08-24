@@ -21,7 +21,7 @@ with st.spinner("Cargando..."):
 
 
     productos_cubiertos = metricas.get("Items faltantes",{})
-    data_productos_cubiertos = pd.DataFrame(productos_cubiertos)
+    data_productos_cubiertos = pd.DataFrame(productos_cubiertos, columns=["Producto","Detalle","Cantidad"])
 
 col1, col2, col3 = st.columns(3)
 with col1:
