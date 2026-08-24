@@ -26,7 +26,7 @@ with kpi1:
         width='stretch'
     )
 
-with kpi6:
+with kpi2:
     kpi_ingresos = metricas.get("Ingresos",0)
     st.metric(
         label="Ingresos",
@@ -37,7 +37,7 @@ with kpi6:
     )
 
 
-with kpi2:
+with kpi3:
     kpi_adelantos = metricas.get("adelantos",0)
     st.metric(
         label="Adelantos",
@@ -47,7 +47,7 @@ with kpi2:
         format='dollar'
     )
 
-with kpi3:
+with kpi4:
     kpi_deudas = metricas.get("deudas",0)
     st.metric(
         label="Deudas",
@@ -57,7 +57,7 @@ with kpi3:
         format='dollar'
     )
 
-with kpi4:
+with kpi5:
     kpi_utilidad = metricas.get("utilidad neta",0)
     st.metric(
         label="Utilidad Neta",
@@ -67,7 +67,7 @@ with kpi4:
         format='dollar'
     )
 
-with kpi5:
+with kpi6:
     kpi_costos = metricas.get("costos",0)
     st.metric(
         label="Costos",
