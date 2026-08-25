@@ -159,6 +159,19 @@ class ServiceLimpiezaSheetsKits(BaseServiceSheetsLimpieza):
                             id_orden=0,
                             id_producto=0
                         ))
+                    elif llave.startswith("pz_cuchillos"):
+                        producto = "Cuchillo"
+                        detalle = "Cuchillo"
+                        cantidad = int(str(valor).strip())
+                        detalles.append(DetalleOrdenRequest(
+                            tipo_pedido="Kit",
+                            producto=producto,
+                            detalle=detalle,
+                            cantidad=cantidad,
+                            extra="Sí",
+                            id_orden=0,
+                            id_producto=0
+                        ))
         if self.data.extra_bolsa_tote and "Sí" in self.data.extra_bolsa_tote:
             detalles.append(DetalleOrdenRequest(
                 tipo_pedido="Kit",
@@ -289,6 +302,19 @@ class ServiceLimpiezaSheetsCombos(BaseServiceSheetsLimpieza):
                                     id_orden=0,
                                     id_producto=0
                                 ))
+                        if llave.startswith("pz_cuchillos"):
+                            producto = "Cuchillo"
+                            detalle = "Cuchillo"
+                            cantidad = int(str(valor).strip())
+                            detalles.append(DetalleOrdenRequest(
+                                tipo_pedido="Combo",
+                                producto=producto,
+                                detalle=detalle,
+                                cantidad=cantidad,
+                                extra="Sí",
+                                id_orden=0,
+                                id_producto=0
+                            ))
                 if isinstance(valor, int):
                     if self.data.pregunta_pz_extra != None:
                         if llave.startswith("colm_pz_"):
@@ -470,6 +496,20 @@ class ServiceLimpiezaSheetsPiezas(BaseServiceSheetsLimpieza):
                             producto=producto,
                             detalle=detalle,
                             cantidad=piezas,
+                            extra="No",
+                            pertenencia="Individual",
+                            id_orden=0,
+                            id_producto=0
+                        ))
+                    if llave.startswith("pz_cuchillos"):
+                        producto = "Cuchillo"
+                        detalle = "Cuchillo"
+                        cantidad = int(str(valor).strip())
+                        detalles.append(DetalleOrdenRequest(
+                            tipo_pedido="Piezas Individuales",
+                            producto=producto,
+                            detalle=detalle,
+                            cantidad=cantidad,
                             extra="No",
                             pertenencia="Individual",
                             id_orden=0,
