@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from Back.repositories.repositories import RepositoryCatalogoProductos, RepositoryOrdenes
 from Back.models.dtos_tipob import DTOBInventarios
-from Back.models.dtos_tipoa import CatalogoProductoRequest, InventarioRequest
+from Back.models.dtos_tipoa import CatalogoProductoRequest, InventarioRequest, DetalleOrdenRequest
 
 class OrquestadorStock:
     def __init__(self, db: Session):
@@ -36,41 +36,54 @@ class OrquestadorStock:
                 id_producto = pendiente.id_producto
 
                 if stock_actual.get(id_producto,0) > 0:
-                    if stock_actual[id_producto] >= pendiente.cantidad:
-                        stock_actual[id_producto] -= pendiente.cantidad
+                    cantidad_asignar = min(stock_actual[id_producto], pendiente.cantidad)
+                    faltante = pendiente.cantidad - cantidad_asignar
+                    stock_actual[id_producto] -= cantidad_asignar
 
-                        self.repo_cat_productos.asignar_items(
-                            id_producto=id_producto,
+                    self.repo_cat_productos.asignar_items(
+                        id_producto=id_producto,
+                        id_detalle=pendiente.id_detalle,
+                        cantidad=cantidad_asignar
+                    )
+
+                    if faltante > 0:
+                        self.repo_ordenes.actualizar_detalle_orden(
                             id_detalle=pendiente.id_detalle,
-                            cantidad=pendiente.cantidad
+                            items={
+                                "cantidad": cantidad_asignar,
+                                "subtotal": pendiente.precio_unitario * cantidad_asignar,
+                                "asignacion": "Asignado"
+                            }
                         )
 
-                        self.repo_ordenes.actualizar_asignacion_detalle(
-                            id_detalle=pendiente.id_detalle
+                        nuevo_detalle = DetalleOrdenRequest(
+                            id_orden=pendiente.id_orden,
+                            id_producto=pendiente.id_producto,
+                            tipo_pedido=pendiente.tipo_pedido,
+                            producto=pendiente.producto,
+                            detalle=pendiente.detalle,
+                            cantidad=faltante,
+                            extra=pendiente.extra,
+                            pertenencia=pendiente.pertenencia,
+                            precio_unitario=pendiente.precio_unitario,
+                            subtotal=pendiente.precio_unitario * faltante,
+                            asignacion="Pendiente"
                         )
-
-                        self.repo_cat_productos.actualizar_stock(
-                            id_producto=id_producto,
-                            cantidad=stock_actual[id_producto]
-                        )
-
-                        ordenes_afectadas.add(pendiente.id_orden)
+                        self.repo_ordenes.crear_detalle_orden(nuevo_detalle)
                     else:
-                        pass
+                        self.repo_ordenes.actualizar_detalle_orden(
+                            id_detalle=pendiente.id_detalle,
+                            items= {"asignacion":"Asignado"}
+                        )
 
-            for orden in ordenes_afectadas:
-                items_cubiertos = [item.asignacion for item in self.repo_ordenes.evaluacion_asignaciones(id_orden=orden)]
+                    self.repo_cat_productos.actualizar_stock(
+                        id_producto=id_producto,
+                        cantidad=cantidad_asignar
+                    )
+                    ordenes_afectadas.add(pendiente.id_orden)
 
-                if "Pendiente" in items_cubiertos:
-                    self.repo_ordenes.actualizar_asignacion_orden(
-                        id_orden=orden,
-                        estado="Parcialmente Asignado"
-                    )
-                else:
-                    self.repo_ordenes.actualizar_asignacion_orden(
-                        id_orden=orden,
-                        estado="Asignado"
-                    )
+            if ordenes_afectadas:
+                self.repo_ordenes.actualizar_stock_masivo(ordenes_id=ordenes_afectadas)
 
             self.db.commit()
             return True

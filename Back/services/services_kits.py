@@ -26,40 +26,40 @@ class BaseServiceSheetsLimpieza(ABC):
     def crear_orden_detalles(self) -> List[DetalleOrdenRequest]:
         pass
 
-class ServiceLimpiezaSheetsKits(BaseServiceSheetsLimpieza):
+class ServiceLimpiezaSheetsKitsPlus(BaseServiceSheetsLimpieza):
     def crear_orden_detalles(self):
         detalles = []
-        if self.data.color_mandil_kit:
+        if self.data.color_mandil_kit_plus:
             detalles.append(DetalleOrdenRequest(
-                tipo_pedido="Kit",
+                tipo_pedido="Kit plus",
                 producto="Mandil",
-                detalle=str(self.data.color_mandil_kit).title(),
+                detalle=str(self.data.color_mandil_kit_plus).title(),
                 cantidad=1,
                 id_orden=0, #Temporal
                 id_producto=0, #Temporal
                 extra="No"
             ))
-        if self.data.talla_guantes_kit:
+        if self.data.talla_guantes_kit_plus:
             detalles.append(DetalleOrdenRequest(
-                tipo_pedido="Kit",
+                tipo_pedido="Kit plus",
                 producto="Guantes de plástico",
-                detalle=str(self.data.talla_guantes_kit).title(),
+                detalle=str(self.data.talla_guantes_kit_plus).title(),
                 cantidad=1,
                 id_orden=0,
                 id_producto=0,
                 extra="No"
             ))
             detalles.append(DetalleOrdenRequest(
-                tipo_pedido="Kit",
+                tipo_pedido="Kit plus",
                 producto="Guantes de nitrilo",
-                detalle=str(self.data.talla_guantes_kit).title(),
+                detalle=str(self.data.talla_guantes_kit_plus).title(),
                 cantidad=1,
                 id_orden=0,
                 id_producto=0,
                 extra="No"
             ))
             detalles.append(DetalleOrdenRequest(
-                tipo_pedido="Kit",
+                tipo_pedido="Kit plus",
                 producto="Cuchillo",
                 detalle="Cuchillo",
                 cantidad=1,
@@ -75,7 +75,7 @@ class ServiceLimpiezaSheetsKits(BaseServiceSheetsLimpieza):
                         producto = "Mandil"
                         detalle = llave.replace("colm_pz_",'').replace("_", ' ').title()
                         detalles.append(DetalleOrdenRequest(
-                            tipo_pedido="Kit",
+                            tipo_pedido="Kit plus",
                             producto=producto,
                             detalle=detalle,
                             cantidad=valor,
@@ -87,7 +87,7 @@ class ServiceLimpiezaSheetsKits(BaseServiceSheetsLimpieza):
                         producto = "Guantes de plástico"
                         detalle = llave.replace("pz_talla_guantesp_",'').title()
                         detalles.append(DetalleOrdenRequest(
-                            tipo_pedido="Kit",
+                            tipo_pedido="Kit plus",
                             producto=producto,
                             detalle=detalle,
                             cantidad=valor,
@@ -99,7 +99,7 @@ class ServiceLimpiezaSheetsKits(BaseServiceSheetsLimpieza):
                         producto = "Guantes de nitrilo"
                         detalle = llave.replace("pz_talla_guantesn_",'').title()
                         detalles.append(DetalleOrdenRequest(
-                            tipo_pedido="Kit",
+                            tipo_pedido="Kit plus",
                             producto=producto,
                             detalle=detalle,
                             cantidad=valor,
@@ -111,7 +111,7 @@ class ServiceLimpiezaSheetsKits(BaseServiceSheetsLimpieza):
                         producto = "Cuchillo"
                         detalle = "Cuchillo"
                         detalles.append(DetalleOrdenRequest(
-                            tipo_pedido="Kit",
+                            tipo_pedido="Kit plus",
                             producto=producto,
                             detalle=detalle,
                             cantidad=valor,
@@ -125,7 +125,7 @@ class ServiceLimpiezaSheetsKits(BaseServiceSheetsLimpieza):
                         producto = "Mandil"
                         detalle = llave.replace("colm_pz_",'').replace("_",' ').title()
                         detalles.append(DetalleOrdenRequest(
-                            tipo_pedido="Kit",
+                            tipo_pedido="Kit plus",
                             producto=producto,
                             detalle=detalle,
                             cantidad=cantidad,
@@ -138,7 +138,7 @@ class ServiceLimpiezaSheetsKits(BaseServiceSheetsLimpieza):
                         detalle = llave.replace("pz_talla_guantesp_",'').title()
                         cantidad = len(valor.split(","))
                         detalles.append(DetalleOrdenRequest(
-                            tipo_pedido="Kit",
+                            tipo_pedido="Kit plus",
                             producto=producto,
                             detalle=detalle,
                             cantidad=cantidad,
@@ -151,7 +151,7 @@ class ServiceLimpiezaSheetsKits(BaseServiceSheetsLimpieza):
                         detalle = llave.replace("pz_talla_guantesn_",'').title()
                         cantidad = len(valor.split(","))
                         detalles.append(DetalleOrdenRequest(
-                            tipo_pedido="Kit",
+                            tipo_pedido="Kit plus",
                             producto=producto,
                             detalle=detalle,
                             cantidad=cantidad,
@@ -164,7 +164,7 @@ class ServiceLimpiezaSheetsKits(BaseServiceSheetsLimpieza):
                         detalle = "Cuchillo"
                         cantidad = int(str(valor).strip())
                         detalles.append(DetalleOrdenRequest(
-                            tipo_pedido="Kit",
+                            tipo_pedido="Kit plus",
                             producto=producto,
                             detalle=detalle,
                             cantidad=cantidad,
@@ -174,7 +174,7 @@ class ServiceLimpiezaSheetsKits(BaseServiceSheetsLimpieza):
                         ))
         if self.data.extra_bolsa_tote and "Sí" in self.data.extra_bolsa_tote:
             detalles.append(DetalleOrdenRequest(
-                tipo_pedido="Kit",
+                tipo_pedido="Kit plus",
                 producto="Bolsa",
                 detalle="Tote",
                 cantidad=1,
@@ -184,7 +184,7 @@ class ServiceLimpiezaSheetsKits(BaseServiceSheetsLimpieza):
             ))
         else:
             detalles.append(DetalleOrdenRequest(
-                tipo_pedido="Kit",
+                tipo_pedido="Kit plus",
                 producto="Bolsa",
                 detalle="Reciclable",
                 cantidad=1,
@@ -194,21 +194,182 @@ class ServiceLimpiezaSheetsKits(BaseServiceSheetsLimpieza):
             ))
         return detalles
 
-class ServiceLimpiezaSheetsCombos(BaseServiceSheetsLimpieza):
+class ServiceLimpiezaSheetsKitsBasicos(BaseServiceSheetsLimpieza):
+    def crear_orden_detalles(self):
+        dtos_dict = self.data.model_dump()
+        detalles = []
+        if self.data.color_mandil_kit_basico:
+            detalles.append(DetalleOrdenRequest(
+                id_producto=0,
+                id_orden=0,
+                tipo_pedido="Kit básico",
+                detalle=str(self.data.color_mandil_kit_basico).title(),
+                producto="Mandil",
+                cantidad=1,
+                extra="No"
+            ))
+            detalles.append(DetalleOrdenRequest(
+                id_producto=0,
+                id_orden=0,
+                tipo_pedido="Kit básico",
+                producto="Cuchillo",
+                detalle="Cuchillo",
+                cantidad=1,
+                extra="No"
+            ))
+        if self.data.talla_guantes_kit_basico:
+            detalles.append(DetalleOrdenRequest(
+                id_producto=0,
+                id_orden=0,
+                tipo_pedido="Kit básico",
+                producto="Guantes de nitrilo",
+                detalle=str(self.data.talla_guantes_kit_basico).title(),
+                cantidad=2,
+                extra="No"
+            ))
+        if self.data.ecobolsa_kit_basico:
+            if self.data.ecobolsa_kit_basico == "Sí":
+                detalles.append(DetalleOrdenRequest(
+                    id_producto=0,
+                    id_orden=0,
+                    tipo_pedido="Kit básico",
+                    producto="Bolsa",
+                    detalle="Reciclable",
+                    cantidad=1,
+                    extra="Sí"
+                ))
+        for llave, valor in dtos_dict.items():
+            if valor:
+                if isinstance(valor, int):
+                    if llave.startswith("colm_pz_"):
+                        producto = "Mandil"
+                        detalle = llave.replace("colm_pz_",'').replace("_", ' ').title()
+                        detalles.append(DetalleOrdenRequest(
+                            tipo_pedido="Kit básico",
+                            producto=producto,
+                            detalle=detalle,
+                            cantidad=valor,
+                            id_orden=0,
+                            id_producto=0,
+                            extra="Sí"
+                        ))
+                    elif llave.startswith("pz_talla_guantesp_"):
+                        producto = "Guantes de plástico"
+                        detalle = llave.replace("pz_talla_guantesp_",'').title()
+                        detalles.append(DetalleOrdenRequest(
+                            tipo_pedido="Kit básico",
+                            producto=producto,
+                            detalle=detalle,
+                            cantidad=valor,
+                            id_orden=0,
+                            id_producto=0,
+                            extra="Sí"
+                        ))
+                    elif llave.startswith("pz_talla_guantesn_"):
+                        producto = "Guantes de nitrilo"
+                        detalle = llave.replace("pz_talla_guantesn_",'').title()
+                        detalles.append(DetalleOrdenRequest(
+                            tipo_pedido="Kit básico",
+                            producto=producto,
+                            detalle=detalle,
+                            cantidad=valor,
+                            id_orden=0,
+                            id_producto=0,
+                            extra="Sí"
+                        ))
+                    elif llave == "pz_cuchillos":
+                        producto = "Cuchillo"
+                        detalle = "Cuchillo"
+                        detalles.append(DetalleOrdenRequest(
+                            tipo_pedido="Kit básico",
+                            producto=producto,
+                            detalle=detalle,
+                            cantidad=valor,
+                            id_orden=0,
+                            id_producto=0,
+                            extra="Sí"
+                        ))
+                elif isinstance(valor, str):
+                    if llave.startswith("colm_pz_"):
+                        cantidad = len(valor.split(','))
+                        producto = "Mandil"
+                        detalle = llave.replace("colm_pz_",'').replace("_",' ').title()
+                        detalles.append(DetalleOrdenRequest(
+                            tipo_pedido="Kit básico",
+                            producto=producto,
+                            detalle=detalle,
+                            cantidad=cantidad,
+                            extra="Sí",
+                            id_orden=0,
+                            id_producto=0
+                        ))
+                    elif llave.startswith("pz_talla_guantesp_"):
+                        producto = "Guantes de plástico"
+                        detalle = llave.replace("pz_talla_guantesp_",'').title()
+                        cantidad = len(valor.split(","))
+                        detalles.append(DetalleOrdenRequest(
+                            tipo_pedido="Kit básico",
+                            producto=producto,
+                            detalle=detalle,
+                            cantidad=cantidad,
+                            extra="Sí",
+                            id_orden=0,
+                            id_producto=0
+                        ))
+                    elif llave.startswith("pz_talla_guantesn_"):
+                        producto = "Guantes de nitrilo"
+                        detalle = llave.replace("pz_talla_guantesn_",'').title()
+                        cantidad = len(valor.split(","))
+                        detalles.append(DetalleOrdenRequest(
+                            tipo_pedido="Kit básico",
+                            producto=producto,
+                            detalle=detalle,
+                            cantidad=cantidad,
+                            extra="Sí",
+                            id_orden=0,
+                            id_producto=0
+                        ))
+                    elif llave.startswith("pz_cuchillos"):
+                        producto = "Cuchillo"
+                        detalle = "Cuchillo"
+                        cantidad = int(str(valor).strip())
+                        detalles.append(DetalleOrdenRequest(
+                            tipo_pedido="Kit básico",
+                            producto=producto,
+                            detalle=detalle,
+                            cantidad=cantidad,
+                            extra="Sí",
+                            id_orden=0,
+                            id_producto=0
+                        ))
+        if self.data.extra_bolsa_tote and "Sí" in self.data.extra_bolsa_tote:
+            detalles.append(DetalleOrdenRequest(
+                tipo_pedido="Kit básico",
+                producto="Bolsa",
+                detalle="Tote",
+                cantidad=1,
+                id_orden=0,
+                id_producto=0,
+                extra="Sí"
+            ))
+        return detalles
+
+
+class ServiceLimpiezaSheetsCombosCowmpadres(BaseServiceSheetsLimpieza):
     def crear_orden_detalles(self):
         dtos_dict = self.data.model_dump()
         detalles = []
         for llave, valor in dtos_dict.items():
             if valor:
                 if isinstance(valor, str):
-                    if llave.startswith("colm_combo_"):
+                    if llave.startswith("colm_combo_cowmpadres"):
                         producto = "Mandil"
-                        detalle = llave.replace("colm_combo_",'').replace("_",' ').strip().title()
+                        detalle = llave.replace("colm_combo_cowmpadres",'').replace("_",' ').strip().title()
                         kits = valor.split(",")
                         for kit in kits:
                             k = kit.strip()
                             detalles.append(DetalleOrdenRequest(
-                                tipo_pedido="Combo",
+                                tipo_pedido="Combo cowmpadres",
                                 producto=producto,
                                 detalle=detalle.title(),
                                 cantidad=1,
@@ -217,14 +378,14 @@ class ServiceLimpiezaSheetsCombos(BaseServiceSheetsLimpieza):
                                 id_orden=0,
                                 id_producto=0
                             ))
-                    if llave.startswith("combo_talla_guantesp_"):
+                    if llave.startswith("combo_cowmpadres_talla_guantesp_"):
                         producto = "Guantes de plástico"
-                        detalle = llave.replace("combo_talla_guantesp_",'').title()
+                        detalle = llave.replace("combo_cowmpadres_talla_guantesp_",'').title()
                         kits = valor.split(",")
                         for kit in kits:
                             k = kit.strip()
                             detalles.append(DetalleOrdenRequest(
-                                tipo_pedido="Combo",
+                                tipo_pedido="Combo cowmpadres",
                                 producto=producto,
                                 detalle=detalle,
                                 cantidad=1,
@@ -234,7 +395,7 @@ class ServiceLimpiezaSheetsCombos(BaseServiceSheetsLimpieza):
                                 id_producto=0
                             ))
                             detalles.append(DetalleOrdenRequest(
-                                tipo_pedido="Combo",
+                                tipo_pedido="Combo cowmpadres",
                                 producto="Guantes de nitrilo",
                                 detalle=detalle,
                                 cantidad=1,
@@ -244,7 +405,7 @@ class ServiceLimpiezaSheetsCombos(BaseServiceSheetsLimpieza):
                                 id_producto=0
                             ))
                             detalles.append(DetalleOrdenRequest(
-                                tipo_pedido="Combo",
+                                tipo_pedido="Combo cowmpadres",
                                 producto="Cuchillo",
                                 detalle="Cuchillo",
                                 cantidad=1,
@@ -261,7 +422,7 @@ class ServiceLimpiezaSheetsCombos(BaseServiceSheetsLimpieza):
                             for pieza in piezas:
                                 p = pieza.strip()
                                 detalles.append(DetalleOrdenRequest(
-                                    tipo_pedido="Combo",
+                                    tipo_pedido="Combo cowmpadres",
                                     producto=producto,
                                     detalle=detalle,
                                     cantidad=1,
@@ -277,7 +438,7 @@ class ServiceLimpiezaSheetsCombos(BaseServiceSheetsLimpieza):
                             for pieza in piezas:
                                 p = pieza.strip()
                                 detalles.append(DetalleOrdenRequest(
-                                    tipo_pedido="Combo",
+                                    tipo_pedido="Combo cowmpadres",
                                     producto=producto,
                                     detalle=detalle,
                                     cantidad=1,
@@ -293,7 +454,7 @@ class ServiceLimpiezaSheetsCombos(BaseServiceSheetsLimpieza):
                             for pieza in piezas:
                                 p = pieza.strip()
                                 detalles.append(DetalleOrdenRequest(
-                                    tipo_pedido="Combo",
+                                    tipo_pedido="Combo cowmpadres",
                                     producto=producto,
                                     detalle=detalle,
                                     cantidad=1,
@@ -307,7 +468,7 @@ class ServiceLimpiezaSheetsCombos(BaseServiceSheetsLimpieza):
                             detalle = "Cuchillo"
                             cantidad = int(str(valor).strip())
                             detalles.append(DetalleOrdenRequest(
-                                tipo_pedido="Combo",
+                                tipo_pedido="Combo cowmpadres",
                                 producto=producto,
                                 detalle=detalle,
                                 cantidad=cantidad,
@@ -321,7 +482,7 @@ class ServiceLimpiezaSheetsCombos(BaseServiceSheetsLimpieza):
                             producto = "Mandil"
                             detalle = llave.replace("colm_pz_","").replace("_", ' ').title()
                             detalles.append(DetalleOrdenRequest(
-                                tipo_pedido="Combo",
+                                tipo_pedido="Combo cowmpadres",
                                 producto=producto,
                                 detalle=detalle,
                                 cantidad=valor,
@@ -334,7 +495,7 @@ class ServiceLimpiezaSheetsCombos(BaseServiceSheetsLimpieza):
                             producto = "Guantes de plástico"
                             detalle = llave.replace("pz_talla_guantesp_",'').title()
                             detalles.append(DetalleOrdenRequest(
-                                tipo_pedido="Combo",
+                                tipo_pedido="Combo cowmpadres",
                                 producto=producto,
                                 detalle=detalle,
                                 cantidad=valor,
@@ -347,7 +508,7 @@ class ServiceLimpiezaSheetsCombos(BaseServiceSheetsLimpieza):
                             producto = "Guantes de nitrilo"
                             detalle = llave.replace("pz_talla_guantesn_",'').title()
                             detalles.append(DetalleOrdenRequest(
-                                tipo_pedido="Combo",
+                                tipo_pedido="Combo cowmpadres",
                                 producto=producto,
                                 detalle=detalle,
                                 cantidad=valor,
@@ -358,7 +519,7 @@ class ServiceLimpiezaSheetsCombos(BaseServiceSheetsLimpieza):
                             ))
                         if llave.startswith("pz_cuchillos"):
                             detalles.append(DetalleOrdenRequest(
-                                tipo_pedido="Combo",
+                                tipo_pedido="Combo cowmpadres",
                                 producto="Cuchillo",
                                 detalle="Cuchillo",
                                 cantidad=valor,
@@ -367,51 +528,51 @@ class ServiceLimpiezaSheetsCombos(BaseServiceSheetsLimpieza):
                                 id_producto=0,
                                 extra="Sí"
                             ))
-        if self.data.pregunta_kit_extra and "Sí" in self.data.pregunta_kit_extra:
+        if self.data.pregunta_kit_plus_extra and "Sí" in self.data.pregunta_kit_plus_extra:
             detalles.append(DetalleOrdenRequest(
-                tipo_pedido="Combo",
+                tipo_pedido="Combo cowmpadres",
                 producto="Mandil",
-                detalle=str(self.data.col_kit_extra).title(),
+                detalle=str(self.data.col_kit_plus_extra).title(),
                 cantidad=1,
                 extra="No",
-                pertenencia=f"Kit {self.data.numero_kits+1}",
+                pertenencia=f"Kit {self.data.numero_kits_cowmpadres+1}",
                 id_orden=0,
                 id_producto=0
             ))
             detalles.append(DetalleOrdenRequest(
-                tipo_pedido="Combo",
+                tipo_pedido="Combo cowmpadres",
                 producto="Guantes de plástico",
-                detalle=str(self.data.talla_guantes_kit_extra).title(),
+                detalle=str(self.data.talla_guantes_kit_plus_extra).title(),
                 cantidad=1,
                 extra="No",
-                pertenencia=f"Kit {self.data.numero_kits+1}",
+                pertenencia=f"Kit {self.data.numero_kits_cowmpadres+1}",
                 id_orden=0,
                 id_producto=0
             ))
             detalles.append(DetalleOrdenRequest(
-                tipo_pedido="Combo",
+                tipo_pedido="Combo cowmpadres",
                 producto="Guantes de nitrilo",
-                detalle=str(self.data.talla_guantes_kit_extra).title(),
+                detalle=str(self.data.talla_guantes_kit_plus_extra).title(),
                 cantidad=1,
                 extra="No",
-                pertenencia=f"Kit {self.data.numero_kits+1}",
+                pertenencia=f"Kit {self.data.numero_kits_cowmpadres+1}",
                 id_orden=0,
                 id_producto=0
             ))
             detalles.append(DetalleOrdenRequest(
-                tipo_pedido="Combo",
+                tipo_pedido="Combo cowmpadres",
                 producto="Cuchillo",
                 detalle="Cuchillo",
                 cantidad=1,
                 extra="No",
-                pertenencia=f"Kit {self.data.numero_kits+1}",
+                pertenencia=f"Kit {self.data.numero_kits_cowmpadres+1}",
                 id_orden=0,
                 id_producto=0
             ))
         if self.data.extra_bolsa_tote and "Sí" in self.data.extra_bolsa_tote:
             if self.data.extra_bolsa_tote and "una Tote en total" in self.data.extra_bolsa_tote:
                 detalles.append(DetalleOrdenRequest(
-                    tipo_pedido="Combo",
+                    tipo_pedido="Combo cowmpadres",
                     producto="Bolsa",
                     detalle="Tote",
                     cantidad=1,
@@ -421,11 +582,11 @@ class ServiceLimpiezaSheetsCombos(BaseServiceSheetsLimpieza):
                     id_producto=0
                 ))
             elif self.data.extra_bolsa_tote and "una Tote para cada" in self.data.extra_bolsa_tote:
-                cantidad_kits = self.data.numero_kits
-                cantidad_kits_extra = 1 if self.data.pregunta_kit_extra and "Sí" in self.data.pregunta_kit_extra else 0
+                cantidad_kits = self.data.numero_kits_cowmpadres
+                cantidad_kits_extra = 1 if self.data.pregunta_kit_plus_extra and "Sí" in self.data.pregunta_kit_plus_extra else 0
                 for i in range(1, cantidad_kits+cantidad_kits_extra+1):
                     detalles.append(DetalleOrdenRequest(
-                        tipo_pedido="Combo",
+                        tipo_pedido="Combo cowmpadres",
                         producto="Bolsa",
                         detalle="Tote",
                         cantidad=1,
@@ -435,11 +596,11 @@ class ServiceLimpiezaSheetsCombos(BaseServiceSheetsLimpieza):
                         id_producto=0
                     ))
         else:
-            cantidad_kits = self.data.numero_kits
-            cantidad_kits_extra = 1 if self.data.pregunta_kit_extra and "Sí" in self.data.pregunta_kit_extra else 0
+            cantidad_kits = self.data.numero_kits_cowmpadres
+            cantidad_kits_extra = 1 if self.data.pregunta_kit_plus_extra and "Sí" in self.data.pregunta_kit_plus_extra else 0
             for i in range(1, cantidad_kits+cantidad_kits_extra+1):
                 detalles.append(DetalleOrdenRequest(
-                    tipo_pedido="Combo",
+                    tipo_pedido="Combo cowmpadres",
                     producto="Bolsa",
                     detalle="Reciclable",
                     cantidad=1,
@@ -449,6 +610,202 @@ class ServiceLimpiezaSheetsCombos(BaseServiceSheetsLimpieza):
                     id_producto=0
                 ))
         return detalles
+
+
+class ServiceLimpiezaSheetsCombosGoats(BaseServiceSheetsLimpieza):
+    def crear_orden_detalles(self):
+        dtos_dict = self.data.model_dump()
+        detalles = []
+        for llave, valor in dtos_dict.items():
+            if valor:
+                if isinstance(valor, str):
+                    if llave.startswith("colm_combo_amigoats_"):
+                        producto = "Mandil" 
+                        detalle = llave.replace("colm_combo_amigoats_",'').replace("_",' ').title()
+                        kits = valor.split(",")
+                        for kit in kits:
+                            k = kit.strip()
+                            detalles.append(DetalleOrdenRequest(
+                                id_producto=0,
+                                id_orden=0,
+                                tipo_pedido="Combo amigoats",
+                                producto=producto,
+                                detalle=detalle,
+                                cantidad=1,
+                                extra="No",
+                                pertenencia=f"Kit {k}"
+                            ))
+                    if llave.startswith("combo_amigoats_talla_guantesn_"):
+                        producto = "Guantes de nitrilo"
+                        detalle = llave.replace("combo_amigoats_talla_guantesn_",'').replace("_",'').title()
+                        kits = valor.split(",")
+                        for kit in kits:
+                            k = kit.strip()
+                            detalles.append(DetalleOrdenRequest(
+                                id_producto=0,
+                                id_orden=0,
+                                tipo_pedido="Combo amigoats",
+                                producto=producto,
+                                detalle=detalle,
+                                cantidad=2,
+                                pertenencia=f"Kit {k}",
+                                extra="No"
+                            ))
+                            detalles.append(DetalleOrdenRequest(
+                                id_producto=0,
+                                id_orden=0,
+                                tipo_pedido="Combo amigoats",
+                                producto="Cuchillo",
+                                detalle="Cuchillo",
+                                cantidad=1,
+                                extra="No",
+                                pertenencia=f"Kit {k}",
+                            ))
+                    if self.data.pregunta_kit_basico_extra:
+                        if "Sí" in self.data.pregunta_kit_basico_extra:
+                            detalles.append(DetalleOrdenRequest(
+                                id_producto=0,
+                                id_orden=0,
+                                tipo_pedido="Combo amigoats",
+                                producto="Mandil",
+                                detalle=str(self.data.col_kit_basico_extra).title(),
+                                cantidad=1,
+                                extra="Sí",
+                                pertenencia=f"Kit {int(self.data.numero_kits_amigoats)+1}"
+                            ))
+                            detalles.append(DetalleOrdenRequest(
+                                id_producto=0,
+                                id_orden=0,
+                                tipo_pedido="Combo amigoats",
+                                producto="Guantes de nitrilo",
+                                detalle=str(self.data.talla_guantes_kit_basico_extra).title(),
+                                cantidad=2,
+                                extra="Sí",
+                                pertenencia=f"Kit {int(self.data.numero_kits_amigoats)+1}"
+                            ))
+                            detalles.append(DetalleOrdenRequest(
+                                id_producto=0,
+                                id_orden=0,
+                                tipo_pedido="Combo amigoats",
+                                producto="Cuchillo",
+                                detalle="Cuchillo",
+                                cantidad=1,
+                                extra="Sí",
+                                pertenencia=f"Kit {int(self.data.numero_kits_amigoats)+1}"
+                            ))
+                    if self.data.pregunta_pz_extra != None:
+                        if llave.startswith("colm_pz_"):
+                            producto = "Mandil"
+                            detalle = llave.replace("colm_pz_","").replace("_", ' ').title()
+                            piezas = valor.split(",")
+                            for pieza in piezas:
+                                p = pieza.strip()
+                                detalles.append(DetalleOrdenRequest(
+                                    tipo_pedido="Combo amigoats",
+                                    producto=producto,
+                                    detalle=detalle,
+                                    cantidad=1,
+                                    extra="Sí",
+                                    pertenencia=f"Extra {p}",
+                                    id_orden=0,
+                                    id_producto=0
+                                ))
+                        if llave.startswith("pz_talla_guantesp_"):
+                            producto = "Guantes de plástico"
+                            detalle = llave.replace("pz_talla_guantesp_",'').title()
+                            piezas = valor.split(",")
+                            for pieza in piezas:
+                                p = pieza.strip()
+                                detalles.append(DetalleOrdenRequest(
+                                    tipo_pedido="Combo amigoats",
+                                    producto=producto,
+                                    detalle=detalle,
+                                    cantidad=1,
+                                    extra="Sí",
+                                    pertenencia=f"Extra {p}",
+                                    id_orden=0,
+                                    id_producto=0
+                                ))
+                        if llave.startswith("pz_talla_guantesn_"):
+                            producto = "Guantes de nitrilo"
+                            detalle = llave.replace("pz_talla_guantesn_",'').title()
+                            piezas = valor.split(",")
+                            for pieza in piezas:
+                                p = pieza.strip()
+                                detalles.append(DetalleOrdenRequest(
+                                    tipo_pedido="Combo amigoats",
+                                    producto=producto,
+                                    detalle=detalle,
+                                    cantidad=1,
+                                    extra="Sí",
+                                    pertenencia=f"Extra {p}",
+                                    id_orden=0,
+                                    id_producto=0
+                                ))
+                        if llave.startswith("pz_cuchillos"):
+                            producto = "Cuchillo"
+                            detalle = "Cuchillo"
+                            cantidad = int(str(valor).strip())
+                            detalles.append(DetalleOrdenRequest(
+                                tipo_pedido="Combo amigoats",
+                                producto=producto,
+                                detalle=detalle,
+                                cantidad=cantidad,
+                                extra="Sí",
+                                id_orden=0,
+                                id_producto=0
+                            ))
+                    if self.data.pregunta_ecobolsas_combos_amigoats:
+                        if "una para el combo" in self.data.pregunta_ecobolsas_combos_amigoats:
+                            detalles.append(DetalleOrdenRequest(
+                                id_producto=0,
+                                id_orden=0,
+                                tipo_pedido="Combo amigoats",
+                                producto="Bolsa",
+                                detalle="Reciclable",
+                                cantidad=1,
+                                extra="Sí"
+                            ))
+                        if "una para cada kit" in self.data.pregunta_ecobolsas_combos_amigoats:
+                            kits = int(self.data.numero_kits_amigoats)
+                            cantidad_kitbasico_extra = 1 if self.data.pregunta_kit_basico_extra and "Sí" in self.data.pregunta_kit_basico_extra else 0
+                            for i in range(1, cantidad_kitbasico_extra+kits+1):
+                                detalles.append(DetalleOrdenRequest(
+                                    id_producto=0,
+                                    id_orden=0,
+                                    tipo_pedido="Combo amigoats",
+                                    producto="Bolsa",
+                                    detalle="Reciclable",
+                                    cantidad=1,
+                                    extra="Sí",
+                                    pertenencia=f"Kit {i}"
+                                ))
+                        if self.data.extra_bolsa_tote and "Sí" in self.data.extra_bolsa_tote:
+                            if self.data.extra_bolsa_tote and "una Tote en total" in self.data.extra_bolsa_tote:
+                                detalles.append(DetalleOrdenRequest(
+                                    tipo_pedido="Combo amigoats",
+                                    producto="Bolsa",
+                                    detalle="Tote",
+                                    cantidad=1,
+                                    extra="Sí",
+                                    pertenencia="Kit 1",
+                                    id_orden=0,
+                                    id_producto=0
+                                ))
+                            elif self.data.extra_bolsa_tote and "una Tote para cada" in self.data.extra_bolsa_tote:
+                                cantidad_kits = int(self.data.numero_kits_amigoats)
+                                cantidad_kits_extra = 1 if self.data.pregunta_kit_basico_extra and "Sí" in self.data.pregunta_kit_basico_extra else 0
+                                for i in range(1, cantidad_kits+cantidad_kits_extra+1):
+                                    detalles.append(DetalleOrdenRequest(
+                                        tipo_pedido="Combo amigoats",
+                                        producto="Bolsa",
+                                        detalle="Tote",
+                                        cantidad=1,
+                                        extra="Sí",
+                                        pertenencia=f"Kit {i}",
+                                        id_orden=0,
+                                        id_producto=0
+                                    ))
 
 class ServiceLimpiezaSheetsPiezas(BaseServiceSheetsLimpieza):
     def crear_orden_detalles(self):
@@ -607,10 +964,14 @@ class ServiceLimpiezaSheetsEspecial(BaseServiceSheetsLimpieza):
 class FactoryLimpiezaSheets:
     @staticmethod
     def llamar_servicio(data: DTOBSheets) -> BaseServiceSheetsLimpieza:
-        if data.tipo_pedido == "Kit":
-            return ServiceLimpiezaSheetsKits(data=data)
-        elif data.tipo_pedido == "Combo":
-            return ServiceLimpiezaSheetsCombos(data=data)
+        if data.tipo_pedido == "Kit plus":
+            return ServiceLimpiezaSheetsKitsPlus(data=data)
+        elif data.tipo_pedido == "Kit básico":
+            return ServiceLimpiezaSheetsKitsBasicos(data=data)
+        elif data.tipo_pedido == "Combo cowmpadres":
+            return ServiceLimpiezaSheetsCombosCowmpadres(data=data)
+        elif data.tipo_pedido == "Combo amigoats":
+            return ServiceLimpiezaSheetsCombosGoats(data=data)
         elif data.tipo_pedido == "Piezas individuales":
             return ServiceLimpiezaSheetsPiezas(data=data)
         elif data.tipo_pedido == "Tote bag":

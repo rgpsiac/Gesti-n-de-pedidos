@@ -154,6 +154,17 @@ class RepositoryOrdenes():
         ).first()
         return pedidos
 
+    def actualizar_stock_masivo(self, ordenes_id: set):
+        detalles = self.db.query(DetalleOrden.id_orden, DetalleOrden.asignacion).filter(DetalleOrden.id_orden.in_(ordenes_id)).all()
+        estatus_ordenes = {}
+        for id_orden, asignacion in detalles:
+            if id_orden not in estatus_ordenes:
+                estatus_ordenes[id_orden] = "Asignado"
+            if asignacion == "Pendiente":
+                estatus_ordenes[id_orden] = "Parcialmente Asignado"
+        maps = [{"id_orden": k, "asignacion": v} for k, v in estatus_ordenes.items()]
+        self.db.bulk_update_mappings(Orden, maps)
+
 
 class RepositoryCatalogoProductos:
     def __init__(self, db_session: Session):
@@ -215,3 +226,13 @@ class RepositoryCatalogoProductos:
         self.db.flush()
         self.db.refresh(asignacion)
         return asignacion
+
+    def obtener_item_catalogo(self, producto: str, detalle: str):
+        """Devuelve el objeto completo del catálogo para optimizar queries."""
+        resultado = self.db.query(CatalogoProducto).filter(
+            CatalogoProducto.producto == producto,
+            CatalogoProducto.detalle == detalle
+        ).first()
+        if not resultado:
+            raise ValueError(f"El producto {producto} - {detalle} no se encuentra en la BD")
+        return resultado
