@@ -41,6 +41,7 @@ class DetalleOrdenBase(BaseModel):
     precio_unitario: float = Field(default=0.0)
     subtotal: float = Field(default=0.0)
     asignacion: str|None = Field(default="Pendiente")
+    costo_unitario: float|None = Field(default=0)
 
 class DetalleOrdenRequest(DetalleOrdenBase):
     id_orden: int
