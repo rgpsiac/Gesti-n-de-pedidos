@@ -9,6 +9,16 @@ class ServiceMetricas:
         self.repo_ordenes = RepositoryOrdenes(db_session=self.db)
 
     def obtener_kpis(self):
+        stock_crudo = self.repo_productos.traer_stock()
+        stock_actual = []
+        for item in stock_crudo:
+            dto = {
+                "Producto": item.producto,
+                "Detalle": item.detalle,
+                "Disponibles": item.disponibles
+            }
+            stock_actual.append(dto)
+
         metricas = self.repo_ordenes.metricas_ordenes()
 
         costos = self.repo_ordenes.costos_totales()
@@ -50,5 +60,6 @@ class ServiceMetricas:
             "Items": kpi_items,
             "Pedidos cubiertos": kpi_pedidos_cubiertos,
             "Items faltantes": items_faltantes,
-            "Ingresos":kpi_ingresos}
+            "Ingresos":kpi_ingresos,
+            "Stock actual": stock_actual}
         return kpi_dict

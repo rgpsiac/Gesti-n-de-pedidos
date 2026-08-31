@@ -22,6 +22,8 @@ with st.spinner("Cargando..."):
 
     productos_cubiertos = metricas.get("Items faltantes",{})
     data_productos_cubiertos = pd.DataFrame(productos_cubiertos)
+    stock_actual = metricas.get("Stock actual", {})
+    data_stock_actual = pd.DataFrame(stock_actual)
 
 col1, col2, col3 = st.columns(3)
 with col1:
@@ -68,6 +70,20 @@ if not data_productos_cubiertos.empty:
     )
 else:
     st.info("Aquí aparecerán los items faltantes")
+
+if not data_stock_actual.empty:
+    graph_stock_actual = px.treemap(
+        data_frame=data_stock_actual,
+        path=["Producto", "Detalle"],
+        values="Disponibles",
+        title="Stock actual",
+        color="Producto"
+    )
+    graph_stock_actual.update_traces(textinfo='label+value')
+    st.plotly_chart(
+        figure_or_data=graph_stock_actual,
+        use_container_width=True
+    )
 
 with st.popover(label="Agregar stock",
                 type='primary',

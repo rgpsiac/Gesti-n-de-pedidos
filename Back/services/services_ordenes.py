@@ -48,7 +48,8 @@ class ServiceOrdenes:
             return max(0.0, precio_cliente-pagado_cliente)
 
     def actualizar_detalles_orden(self, id_detalle: int, detalle_nuevo: str, cantidad_nueva: int) -> int:
-        detalles = {"detalle":detalle_nuevo, "cantidad": cantidad_nueva}
+        detalles_sucios = {"detalle":detalle_nuevo, "cantidad": cantidad_nueva}
+        detalles = {llave:valor for llave, valor in detalles_sucios.items() if valor is not None}
         fila_afectada = self.repo_ordenes.actualizar_detalle_orden(id_detalle=id_detalle, items=detalles)
         return fila_afectada
 
