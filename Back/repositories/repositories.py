@@ -155,7 +155,7 @@ class RepositoryOrdenes():
         return pedidos
 
     def actualizar_stock_masivo(self, ordenes_id: set):
-        detalles = self.db.query(DetalleOrden.id_orden, DetalleOrden.asignacion).filter(DetalleOrden.id_orden.in_(ordenes_id)).all()
+        detalles = self.db.query(DetalleOrden.id_orden, DetalleOrden.asignacion).filter(DetalleOrden.id_orden.in_(list(ordenes_id))).all()
         estatus_ordenes = {}
         for id_orden, asignacion in detalles:
             if id_orden not in estatus_ordenes:

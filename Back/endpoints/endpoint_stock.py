@@ -5,6 +5,7 @@ from Back.repositories.repositories import RepositoryCatalogoProductos, Reposito
 from Back.orquestadores.orquestador_stock import OrquestadorStock
 from Back.models.dtos_tipob import DTOBInventarios
 from Back.utils.api_verification import verificar_api
+import traceback
 
 router = APIRouter(prefix="/api/v1/inventarios", tags=["Gestión de inventario"], dependencies=[Depends(verificar_api)])
 
@@ -20,6 +21,7 @@ def agregar_inventario_endpoint(payload: DTOBInventarios, db: Session = Depends(
         return {"mensaje":"Actualización exitosa"}
 
     except Exception as e:
+        error_msg = traceback.format_exc()
 
         raise HTTPException(status_code=500, detail=f"Error procesando los datos: {str(e)}")
 
