@@ -32,10 +32,14 @@ class OrquestadorStock:
             stock_actual = self.repo_cat_productos.stock_to_dict()
             ordenes_afectadas = set()
 
+            print(f"DEBUG. Pendientes encontrados: {len(items_pendientes)}")
+            print(f"DEBUG. Stock actual en BD: {stock_actual}")
+
             for pendiente in items_pendientes:
                 id_producto = pendiente.id_producto
 
                 if stock_actual.get(id_producto,0) > 0:
+                    print(f"DEBUG. Hay stock para producto: {id_producto}")
                     cantidad_asignar = min(stock_actual[id_producto], pendiente.cantidad)
                     faltante = pendiente.cantidad - cantidad_asignar
                     stock_actual[id_producto] -= cantidad_asignar
@@ -47,6 +51,7 @@ class OrquestadorStock:
                     )
 
                     if faltante > 0:
+                        print(f"DEBUG. Stock insuficiente para {id_producto}. Realizando split (entregando: {cantidad_asignar}, deuda: {faltante})")
                         self.repo_ordenes.actualizar_detalle_orden(
                             id_detalle=pendiente.id_detalle,
                             items={
@@ -67,7 +72,8 @@ class OrquestadorStock:
                             pertenencia=pendiente.pertenencia,
                             precio_unitario=pendiente.precio_unitario,
                             subtotal=pendiente.precio_unitario * faltante,
-                            asignacion="Pendiente"
+                            asignacion="Pendiente",
+                            costo_unitario=pendiente.costo_unitario
                         )
                         self.repo_ordenes.crear_detalle_orden(nuevo_detalle)
                     else:
