@@ -22,7 +22,7 @@ def agregar_inventario_endpoint(payload: DTOBInventarios, db: Session = Depends(
 
     except Exception as e:
         error_msg = traceback.format_exc()
-
+        print(f"Error procesando los datos. Mensaje desde el endpoint:\n{error_msg}")
         raise HTTPException(status_code=500, detail=f"Error procesando los datos: {str(e)}")
 
 @router.get("/")
