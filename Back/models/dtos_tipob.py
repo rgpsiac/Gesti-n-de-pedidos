@@ -5,7 +5,7 @@ from datetime import datetime, date
 class DTOBSheets(BaseModel):
     fecha_registro: str|None = Field(alias='Marca temporal')
     nombre: str|None = Field(alias='Escribe tu nombre (1 nombre y 1 apellido)')
-    telefono: int|None = Field(alias='Ingresa tu número de celular (sin espacios)')
+    telefono: int|None|str = Field(alias='Ingresa tu número de celular (sin espacios)')
     tipo_pedido: str|None = Field(alias='¿Qué pedirás?')
 
     color_mandil_kit_plus: str|None = Field(alias='Color del mandil - Kit plus', default=None)

@@ -806,6 +806,7 @@ class ServiceLimpiezaSheetsCombosGoats(BaseServiceSheetsLimpieza):
                                         id_orden=0,
                                         id_producto=0
                                     ))
+        return detalles
 
 class ServiceLimpiezaSheetsPiezas(BaseServiceSheetsLimpieza):
     def crear_orden_detalles(self):
